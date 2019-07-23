@@ -66,6 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_settings_black_24dp"
             android:text="@string/button_config"/>
 
         <Button
@@ -74,6 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_get_app_black_24dp"
             android:text="@string/button_update"
             android:enabled="false"/>
 
@@ -83,6 +85,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_play_arrow_black_24dp"
             android:text="@string/button_play"
             android:enabled="false"/>
 
