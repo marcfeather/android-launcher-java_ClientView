@@ -6,12 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.coretera.clientview.Callback;
 import com.coretera.clientview.R;
@@ -30,9 +32,11 @@ public class PlayFragment extends Fragment {
 
     private ProgressDialog mProgressDialog;
 
-    private RelativeLayout mPagerLayout;
     private static ViewPager mPager;
     private static int currentPage = 0;
+
+    int fileCount;
+    CountDownTimer timer;
 
     @Override
     public void onAttach(Context context) {
@@ -58,7 +62,7 @@ public class PlayFragment extends Fragment {
         mContext = getContext();
 
         try {
-            mPagerLayout = view.findViewById(R.id.pagerLayout);
+            InitProgressDialog();
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -72,8 +76,6 @@ public class PlayFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-            InitProgressDialog();
-
             new InitImageViewTask().execute();
 
         }catch (Exception e){
@@ -107,19 +109,13 @@ public class PlayFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Bitmap> result) {
             if (result.size() == 0) {
-                //mTextCount.setText("ไม่พบรูปภาพในเครื่อง");
+                mCallback.someEvent(new MainFragment());
+
             }else {
-                //mTextCount.setVisibility(View.GONE);
                 BindImageToView(result);
-                mPagerLayout.setVisibility(View.VISIBLE);
             }
 
             mProgressDialog.dismiss();
-
-//            if (firstTime) {
-//                countDownTimer2.start();
-//                firstTime = false;
-//            }
         }
     }
 
@@ -131,7 +127,9 @@ public class PlayFragment extends Fragment {
         File[] files = directory.listFiles();
         Bitmap bitmap;
 
-        for(int i=0;i<files.length;i++){
+        fileCount = files.length;
+
+        for(int i=0;i<fileCount;i++){
             bitmap = BitmapFactory.decodeFile(files[i].getPath());
             listBitmap.add(bitmap);
         }
@@ -152,31 +150,62 @@ public class PlayFragment extends Fragment {
         mPager.setCurrentItem(currentPage);
 
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             public void onPageSelected(int position) {
                 setting.SaveCurrentPage(mContext, position);
+
+                timer.cancel();
+                timer.start();
             }
         });
+
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("Awesome Tag", "onTouch");
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d("Awesome Tag", "ACTION_DOWN");
+                        timer.cancel();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.d("Awesome Tag", "ACTION_UP");
+                        timer.start();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        int sec = setting.GetSlideTime(mContext);
+        if (sec == 0) { sec = ConfigFragment.length; }
+
+        automateSlider(sec);
     }
 
-//    private void automateSlider() {
-//        isCountDownTimerActive = true;
-//        new CountDownTimer(SLIDER_TIMER, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//            }
-//            @Override
-//            public void onFinish() {
-//                int nextSlider = currentPage + 1;
-//
-//                if (nextSlider == 3) {
-//                    nextSlider = 0; // if it's last Image, let it go to the first image
-//                }
-//                mPager.setCurrentItem(nextSlider);
-//                isCountDownTimerActive = false;
-//            }
-//        }.start();
-//    }
+    private void automateSlider(int secTimeSlide) {
+        timer = new CountDownTimer((secTimeSlide * 1000), 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+            @Override
+            public void onFinish() {
+                int nextSlider = setting.GetCurrentPage(mContext) + 1;
+
+                if (nextSlider == fileCount) {
+                    nextSlider = -1; // if it's last Image, let it go to the first image
+                }
+
+                mPager.setCurrentItem(nextSlider);
+
+                start();
+            }
+        };
+
+        timer.start();
+    }
 }
+
+

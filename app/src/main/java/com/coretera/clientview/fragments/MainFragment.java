@@ -91,25 +91,25 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         folder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/";
         setting.SaveExternalStorageDirectory(mContext, folder);
 
-        File directory = new File(folder);
-        File[] files = directory.listFiles();
-
-        if (files != null && files.length > 0) {
-            mButtonPlay.setEnabled(true);
-        }else {
-            mButtonPlay.setEnabled(false);
-        }
-
         mTextViewloading.setVisibility(View.VISIBLE);
 
         if (setting.GetIsSetConfig(getContext())){
             mProgressBar.setVisibility(View.VISIBLE);
             mTextViewloading.setText("Network connecting..");
 
+            File directory = new File(folder);
+            File[] files = directory.listFiles();
+            if (files != null && files.length > 0) {
+                mButtonPlay.setEnabled(true);
+            }else {
+                mButtonPlay.setEnabled(false);
+            }
+
             timer.start();
 
         }else {
-            mTextViewloading.setText("Network not connect, Please config wifi");
+            mProgressBar.setVisibility(View.GONE);
+            mTextViewloading.setText("System not config, Please config system");
         }
     }
 
@@ -167,7 +167,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     timer2.start();
 
                 }else {
-                    mTextViewloading.setText("Network not connect, Please config wifi");
+                    mTextViewloading.setText("Network not connect, Please config wifi for update");
                     mButtonUpdate.setEnabled(false);
 
                     final Handler handler = new Handler();
@@ -416,7 +416,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void PlayContent() {
-        Fragment fragment = new PlayFragment();
-        mCallback.someEvent(fragment);
+        mCallback.someEvent(new PlayFragment());
     }
 }

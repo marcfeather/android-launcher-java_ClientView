@@ -45,7 +45,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
     private TextView mTextViewSlideTime;
     private Integer slideTime;
-    final Integer length = 5;
+    public static final Integer length = 5;
 
     private InputMethodManager inputMethodManager;
 
@@ -131,6 +131,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
     private void SetValue() {
         slideTime = setting.GetSlideTime(getContext());
+        if (slideTime == 0) { slideTime = length; }
         mTextViewSlideTime.setText(String.valueOf(slideTime));
     }
 
