@@ -1,9 +1,11 @@
 package com.coretera.clientview.fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +30,10 @@ import com.coretera.clientview.Callback;
 import com.coretera.clientview.R;
 import com.coretera.clientview.utility.*;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class ConfigFragment extends Fragment implements View.OnClickListener {
 
@@ -39,6 +45,8 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
     private final int MY_PERMISSIONS_ACCESS_COARSE_LOCATION = 1;
     WifiReceiver receiverWifi;
 
+    private TextView TextWifiStatusValue;
+    private Button ButtonWifiScan;
     private TextView TextWifiSelected;
     private EditText EditTextPassword;
     private Button ButtonWifiConnect;
@@ -48,6 +56,8 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
     public static final Integer length = 5;
 
     private InputMethodManager inputMethodManager;
+
+    private String networkType;
 
     @Override
     public void onAttach(Context context) {
@@ -84,6 +94,8 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             TextWifiSelected = view.findViewById(R.id.wifi_selected);
             EditTextPassword = view.findViewById(R.id.wifi_Password);
             ButtonWifiConnect = view.findViewById(R.id.wifi_connect);
+            TextWifiStatusValue = view.findViewById(R.id.wifi_status_value);
+            ButtonWifiScan = view.findViewById(R.id.wifi_scan);
 
             wifiList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -94,9 +106,13 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                     TextWifiSelected.setVisibility(View.VISIBLE);
                     TextWifiSelected.setText(selectedItem);
 
-                    EditTextPassword.setVisibility(View.VISIBLE);
-                    EditTextPassword.setText("");
-                    EditTextPassword.requestFocus();
+                    //setting.toastException(mContext, networkType);
+                    networkType = getScanResultSecurity(wifiManager, selectedItem);
+                    if (!networkType.equals("OPEN")) {
+                        EditTextPassword.setVisibility(View.VISIBLE);
+                        EditTextPassword.setText("");
+                        EditTextPassword.requestFocus();
+                    }
 
                     ButtonWifiConnect.setVisibility(View.VISIBLE);
 
@@ -104,12 +120,6 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                     UseSoftKeyboard(true);
                 }
             });
-
-            wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            if (!wifiManager.isWifiEnabled()) {
-                Toast.makeText(getContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
-                wifiManager.setWifiEnabled(true);
-            }
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -124,6 +134,11 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
         try {
             SetValue();
+
+            ClearBeforeScan();
+            OpenWifi();
+            ScanWifi();
+
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
         }
@@ -201,8 +216,9 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 //    }
 
     private void ClearBeforeScan(){
-        wifiList.setVisibility(View.VISIBLE);
+        //wifiList.setVisibility(View.VISIBLE);
         //receiverWifi.ClearAllItems();
+        //wifiList.setAdapter(null);
 
         TextWifiSelected.setVisibility(View.GONE);
         EditTextPassword.setVisibility(View.GONE);
@@ -212,15 +228,22 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         UseSoftKeyboard(false);
     }
 
-    private void ScanWifi()
-    {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
-        } else {
-            wifiManager.startScan();
+    private void OpenWifi() {
+        wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (!wifiManager.isWifiEnabled()) {
+            Toast.makeText(getContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
+            wifiManager.setWifiEnabled(true);
         }
+    }
+
+    private void ScanWifi() {
+//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(
+//                    getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+//        } else {
+//            wifiManager.startScan();
+//        }
 
         receiverWifi = new WifiReceiver(wifiManager, wifiList);
         IntentFilter intentFilter = new IntentFilter();
@@ -241,6 +264,9 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             }
         } else {
             Toast.makeText(getContext(), "scanning", Toast.LENGTH_SHORT).show();
+            //ButtonWifiScan.setText("scanning..");
+            //ButtonWifiScan.setEnabled(false);
+
             wifiManager.startScan();
         }
     }
@@ -285,35 +311,194 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         String networkSSID = TextWifiSelected.getText().toString();
         String networkPass = EditTextPassword.getText().toString();
 
-        //Toast.makeText(getContext(),networkSSID, Toast.LENGTH_SHORT).show();
-        //Toast.makeText(getContext(),networkPass, Toast.LENGTH_SHORT).show();
+        boolean result = false;
 
-        WifiConfiguration conf = new WifiConfiguration();
-//        conf.SSID = "\"" + networkSSID + "\"";
-//        //conf.wepKeys[0] = "\"" + networkPass + "\"";
-//        //conf.wepTxKeyIndex = 0;
-//        conf.preSharedKey = "\""+ networkPass +"\"";
-
-        conf.SSID = String.format("\"%s\"", networkSSID);
-        conf.preSharedKey = String.format("\"%s\"", networkPass);
-
-        conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-
-        WifiManager wifiManager = (WifiManager)getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiManager.addNetwork(conf);
-
-        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        for( WifiConfiguration i : list ) {
-            if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-                wifiManager.disconnect();
-                wifiManager.enableNetwork(i.networkId, true);
-                wifiManager.reconnect();
-
+        switch (networkType)
+        {
+            case "WPA":
+                result = ConnectToNetworkWPA(networkSSID, networkPass);
                 break;
-            }
+            case "WEP":
+                result = ConnectToNetworkWEP(networkSSID, networkPass);
+                break;
+            case "OPEN":
+                result = ConnectToNetworkOPEN(networkSSID, networkPass);
+                break;
         }
 
+        if (!result){
+            Toast.makeText(getContext(), networkSSID + " Connect fail", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(getContext(), networkSSID + " Connected", Toast.LENGTH_SHORT).show();
+
+        TextWifiStatusValue.setText(getResources().getString(R.string.connected));
+        TextWifiStatusValue.setTextColor(getResources().getColor(R.color.colorConnected));
         ClearBeforeScan();
+    }
+
+    private String getScanResultSecurity(WifiManager wifiManager, String ssid) {
+        List<ScanResult> networkList = wifiManager.getScanResults();
+        for (ScanResult network : networkList) {
+            if (network.SSID.equals(ssid)) {
+                String Capabilities = network.capabilities;
+                if (Capabilities.contains("WPA")) {
+                    return "WPA";
+                } else if (Capabilities.contains("WEP")) {
+                    return "WEP";
+                } else {
+                    return "OPEN";
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean ConnectToNetworkOPEN( String networkSSID, String password )
+    {
+        try {
+            WifiConfiguration conf = new WifiConfiguration();
+
+            conf.SSID = String.format("\"%s\"", networkSSID);
+            conf.preSharedKey = String.format("\"%s\"", password);
+
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+
+            WifiManager wifiManager = (WifiManager)getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifiManager.addNetwork(conf);
+
+            List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+            for( WifiConfiguration i : list ) {
+                if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                    wifiManager.disconnect();
+                    wifiManager.enableNetwork(i.networkId, true);
+                    wifiManager.reconnect();
+
+                    break;
+                }
+            }
+
+            boolean changeHappen = wifiManager.saveConfiguration();
+            int res = wifiManager.addNetwork(conf);
+            if(res != -1 && changeHappen){
+                Log.d(TAG, "### Change happen");
+                return true;
+
+            }else{
+                Log.d(TAG, "*** Change NOT happen");
+                return false;
+            }
+
+            //return true;
+
+        } catch (Exception ex) {
+            System.out.println(Arrays.toString(ex.getStackTrace()));
+            return false;
+        }
+    }
+
+    public boolean ConnectToNetworkWEP( String networkSSID, String password )
+    {
+        try {
+            WifiConfiguration conf = new WifiConfiguration();
+            conf.SSID = "\"" + networkSSID + "\"";   // Please note the quotes. String should contain SSID in quotes
+            conf.wepKeys[0] = "\"" + password + "\""; //Try it with quotes first
+
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedGroupCiphers.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            conf.allowedGroupCiphers.set(WifiConfiguration.AuthAlgorithm.SHARED);
+
+
+            WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            int networkId = wifiManager.addNetwork(conf);
+
+            if (networkId == -1){
+                //Try it again with no quotes in case of hex password
+                conf.wepKeys[0] = password;
+                networkId = wifiManager.addNetwork(conf);
+            }
+
+            List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+            for( WifiConfiguration i : list ) {
+                if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                    wifiManager.disconnect();
+                    wifiManager.enableNetwork(i.networkId, true);
+                    wifiManager.reconnect();
+                    break;
+                }
+            }
+
+            boolean changeHappen = wifiManager.saveConfiguration();
+            int res = wifiManager.addNetwork(conf);
+            if(res != -1 && changeHappen){
+                Log.d(TAG, "### Change happen");
+                return true;
+
+            }else{
+                Log.d(TAG, "*** Change NOT happen");
+                return false;
+            }
+
+            //WiFi Connection success, return true
+            //return true;
+        } catch (Exception ex) {
+            System.out.println(Arrays.toString(ex.getStackTrace()));
+            return false;
+        }
+    }
+
+    public boolean ConnectToNetworkWPA( String networkSSID, String password )
+    {
+        try {
+            WifiConfiguration conf = new WifiConfiguration();
+            conf.SSID = "\"" + networkSSID + "\"";   // Please note the quotes. String should contain SSID in quotes
+
+            conf.preSharedKey = "\"" + password + "\"";
+
+            conf.status = WifiConfiguration.Status.ENABLED;
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+
+            Log.d("connecting", conf.SSID + " " + conf.preSharedKey);
+
+            WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifiManager.addNetwork(conf);
+
+            Log.d("after connecting", conf.SSID + " " + conf.preSharedKey);
+
+            List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+            for( WifiConfiguration i : list ) {
+                if(i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                    wifiManager.disconnect();
+                    wifiManager.enableNetwork(i.networkId, true);
+                    wifiManager.reconnect();
+                    Log.d("re connecting", i.SSID + " " + conf.preSharedKey);
+
+                    break;
+                }
+            }
+
+            boolean changeHappen = wifiManager.saveConfiguration();
+            int res = wifiManager.addNetwork(conf);
+            if(res != -1 && changeHappen){
+                Log.d(TAG, "### Change happen");
+                return true;
+
+            }else{
+                Log.d(TAG, "*** Change NOT happen");
+                return false;
+            }
+
+            //WiFi Connection success, return true
+            //return true;
+        } catch (Exception ex) {
+            System.out.println(Arrays.toString(ex.getStackTrace()));
+            return false;
+        }
     }
 }
