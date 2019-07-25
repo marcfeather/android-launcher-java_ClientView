@@ -220,7 +220,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
                     //mConnectThread = null;
 
-                    setting.SaveIsSetConfig(getContext());
+                    //setting.SaveIsSetConfig(getContext());
 
                     fragment = new MainFragment();
                     mCallback.someEvent(fragment);

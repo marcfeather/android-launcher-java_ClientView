@@ -93,7 +93,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         mTextViewloading.setVisibility(View.VISIBLE);
 
-        if (setting.GetIsSetConfig(getContext())){
+        //if (setting.GetIsSetConfig(getContext())){
             mProgressBar.setVisibility(View.VISIBLE);
             mTextViewloading.setText("Network connecting..");
 
@@ -107,10 +107,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             timer.start();
 
-        }else {
-            mProgressBar.setVisibility(View.GONE);
-            mTextViewloading.setText("System not config, Please config system");
-        }
+//        }else {
+//            mProgressBar.setVisibility(View.GONE);
+//            mTextViewloading.setText("System not config, Please config system");
+//        }
     }
 
     @Override
@@ -164,7 +164,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mTextViewloading.setText("Network connected");
                     mButtonUpdate.setEnabled(true);
 
-                    timer2.start();
+                    File directory = new File(folder);
+                    File[] files = directory.listFiles();
+                    if (files != null && files.length > 0) {
+                        mButtonPlay.setEnabled(true);
+                        timer2.start();
+                    }else {
+                        mButtonPlay.setEnabled(false);
+                    }
 
                 }else {
                     mTextViewloading.setText("Network not connect, Please config wifi for update");
@@ -229,19 +236,29 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         //setting.SaveExternalStorageDirectory(mContext, folder);
 
         // Specify some url to download images
-        //final String urlPath = "http://www.froove.com/fastaed.com/public_html/frove/cn1/1.jpg";
-        //final URL url1 = stringToURL(urlPath + "1.jpg");
-        final String urlPath = "http://www.freeimageslive.com/galleries/transtech/informationtechnology/pics/";
-        final URL url1 = stringToURL(urlPath + "beige_keyboard.jpg");
-        final URL url2 = stringToURL(urlPath + "computer_blank_screen.jpg");
-        final URL url3 = stringToURL(urlPath + "computer_memory_dimm.jpg");
-        final URL url4 = stringToURL(urlPath + "computer_memory.jpg");
-        final URL url5 = stringToURL(urlPath + "ethernet_router.jpg");
-//        final URL url6 = stringToURL(urlPath + "beige_keyboard.jpg");
-//        final URL url7 = stringToURL(urlPath + "computer_blank_screen.jpg");
-//        final URL url8 = stringToURL(urlPath + "computer_memory_dimm.jpg");
-//        final URL url9 = stringToURL(urlPath + "computer_memory.jpg");
-//        final URL url10 = stringToURL(urlPath + "ethernet_router.jpg");
+        //final String urlPath = "http://www.freeimageslive.com/galleries/transtech/informationtechnology/pics/";
+        final String urlPath = "http://www.clientview.coretera.co.th/content/";
+
+        final URL url1 = stringToURL(urlPath + "1.jpg");
+        final URL url2 = stringToURL(urlPath + "2.jpg");
+        final URL url3 = stringToURL(urlPath + "3.jpg");
+        final URL url4 = stringToURL(urlPath + "4.jpg");
+        final URL url5 = stringToURL(urlPath + "5.jpg");
+        final URL url6 = stringToURL(urlPath + "6.jpg");
+        final URL url7 = stringToURL(urlPath + "7.jpg");
+        final URL url8 = stringToURL(urlPath + "8.jpg");
+        final URL url9 = stringToURL(urlPath + "9.jpg");
+        final URL url10 = stringToURL(urlPath + "10.jpg");
+        final URL url11 = stringToURL(urlPath + "11.jpg");
+        final URL url12 = stringToURL(urlPath + "12.jpg");
+        final URL url13 = stringToURL(urlPath + "13.jpg");
+        final URL url14 = stringToURL(urlPath + "14.jpg");
+        final URL url15 = stringToURL(urlPath + "15.jpg");
+        final URL url16 = stringToURL(urlPath + "16.jpg");
+        final URL url17 = stringToURL(urlPath + "17.jpg");
+        final URL url18 = stringToURL(urlPath + "18.jpg");
+        final URL url19 = stringToURL(urlPath + "19.jpg");
+        final URL url20 = stringToURL(urlPath + "20.jpg");
 
         // Execute the async task
         new DownloadTask()
@@ -250,12 +267,22 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         url2,
                         url3,
                         url4,
-                        url5//,
-//                                url6,
-//                                url7,
-//                                url8,
-//                                url9,
-//                                url10
+                        url5,
+                        url6,
+                        url7,
+                        url8,
+                        url9,
+                        url10,
+                        url11,
+                        url12,
+                        url13,
+                        url14,
+                        url15,
+                        url16,
+                        url17,
+                        url18,
+                        url19,
+                        url20
                 );
     }
 
