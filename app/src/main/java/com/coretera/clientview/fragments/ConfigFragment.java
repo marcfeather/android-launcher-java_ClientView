@@ -21,8 +21,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +47,8 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
     private final int MY_PERMISSIONS_ACCESS_COARSE_LOCATION = 1;
     WifiReceiver receiverWifi;
 
-    private TextView TextWifiStatusValue;
-    private Button ButtonWifiScan;
+    private Switch SwitchWifi;
+    //private TextView TextWifiStatusValue;
     private TextView TextWifiSelected;
     private EditText EditTextPassword;
     private Button ButtonWifiConnect;
@@ -84,18 +86,37 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
         try {
             view.findViewById(R.id.button_done).setOnClickListener(this);
-            view.findViewById(R.id.wifi_scan).setOnClickListener(this);
             view.findViewById(R.id.wifi_connect).setOnClickListener(this);
             view.findViewById(R.id.slide_time_decrease).setOnClickListener(this);
             view.findViewById(R.id.slide_time_increase).setOnClickListener(this);
 
+            SwitchWifi = view.findViewById(R.id.SwitchWifi);
+            //TextWifiStatusValue = view.findViewById(R.id.Text_Wifi_Status);
             mTextViewSlideTime = view.findViewById(R.id.slide_time_value);
             wifiList = view.findViewById(R.id.wifiList);
             TextWifiSelected = view.findViewById(R.id.wifi_selected);
             EditTextPassword = view.findViewById(R.id.wifi_Password);
             ButtonWifiConnect = view.findViewById(R.id.wifi_connect);
-            TextWifiStatusValue = view.findViewById(R.id.wifi_status_value);
-            ButtonWifiScan = view.findViewById(R.id.wifi_scan);
+
+            SwitchWifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //hide soft keyboard
+                    UseSoftKeyboard(false);
+
+                    if (isChecked && !wifiManager.isWifiEnabled()){
+                        wifiManager.setWifiEnabled(true);
+                        SwitchWifi.setText("On");
+                        ClearBeforeScan(true);
+                        ScanWifi();
+
+                    }else if(!isChecked && wifiManager.isWifiEnabled()){
+                        wifiManager.setWifiEnabled(false);
+                        SwitchWifi.setText("Off");
+                        ClearBeforeScan(false);
+                    }
+                }
+            });
 
             wifiList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -112,6 +133,8 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                         EditTextPassword.setVisibility(View.VISIBLE);
                         EditTextPassword.setText("");
                         EditTextPassword.requestFocus();
+                    }else {
+                        EditTextPassword.setVisibility(View.GONE);
                     }
 
                     ButtonWifiConnect.setVisibility(View.VISIBLE);
@@ -133,11 +156,28 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         try {
+            wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager != null && wifiManager.isWifiEnabled()){
+                SwitchWifi.setChecked(true);
+                SwitchWifi.setText("On");
+                ClearBeforeScan(true);
+                ScanWifi();
+
+            }else if(wifiManager != null && !wifiManager.isWifiEnabled()){
+                SwitchWifi.setChecked(false);
+                SwitchWifi.setText("Off");
+            }
+
             SetValue();
 
-            ClearBeforeScan();
-            OpenWifi();
-            ScanWifi();
+//            ClearBeforeScan();
+//            OpenWifi();
+//            ScanWifi();
+
+//            mWifiAdmin.openWifi();// Display the list the first time you come in
+//            scanFlag = 1;
+//            mWifiAdmin.startScan();//Start scanning to send notifications
+//            //AppUtils.getInstance().showLoading(this);
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -157,10 +197,12 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             inputMethodManager = (InputMethodManager) getContext()
                     .getApplicationContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.showSoftInput(EditTextPassword, 0);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(EditTextPassword, 0);
+            }
         }else {
             //hide soft keyboard
-            if (inputMethodManager != null) {
+            if (inputMethodManager != null && getActivity().getCurrentFocus() != null) {
                 inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
             }
@@ -176,16 +218,23 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                     //hide soft keyboard
                     UseSoftKeyboard(false);
 
+                    //mConnectThread = null;
+
                     setting.SaveIsSetConfig(getContext());
 
                     fragment = new MainFragment();
                     mCallback.someEvent(fragment);
                     break;
 
-                case R.id.wifi_scan:
-                    ClearBeforeScan();
-                    ScanWifi();
-                    break;
+//                case R.id.wifi_scan:
+//                    //ClearBeforeScan();
+//                    //ScanWifi();
+//
+////                    mWifiAdmin.openWifi();
+////                    mWifiAdmin.startScan();//Start scanning to send notifications
+////                    //AppUtils.getInstance().showLoading(this);
+////                    scanFlag = 1;
+//                    break;
 
                 case R.id.wifi_connect:
                     ConnectWifi();
@@ -215,10 +264,12 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 //        getWifi();
 //    }
 
-    private void ClearBeforeScan(){
-        //wifiList.setVisibility(View.VISIBLE);
-        //receiverWifi.ClearAllItems();
-        //wifiList.setAdapter(null);
+    private void ClearBeforeScan(Boolean value){
+        if (value) {
+            wifiList.setVisibility(View.VISIBLE);
+        }else {
+            wifiList.setVisibility(View.GONE);
+        }
 
         TextWifiSelected.setVisibility(View.GONE);
         EditTextPassword.setVisibility(View.GONE);
@@ -228,13 +279,13 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         UseSoftKeyboard(false);
     }
 
-    private void OpenWifi() {
-        wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (!wifiManager.isWifiEnabled()) {
-            Toast.makeText(getContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
-            wifiManager.setWifiEnabled(true);
-        }
-    }
+//    private void OpenWifi() {
+//        wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        if (!wifiManager.isWifiEnabled()) {
+//            Toast.makeText(getContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
+//            wifiManager.setWifiEnabled(true);
+//        }
+//    }
 
     private void ScanWifi() {
 //        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -263,7 +314,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                 wifiManager.startScan();
             }
         } else {
-            Toast.makeText(getContext(), "scanning", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Wifi Scanning", Toast.LENGTH_SHORT).show();
             //ButtonWifiScan.setText("scanning..");
             //ButtonWifiScan.setEnabled(false);
 
@@ -306,7 +357,10 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
     private void ConnectWifi()
     {
-        if (EditTextPassword.getText().toString().trim().equals("")) { return; }
+        if (!networkType.equals("OPEN") && EditTextPassword.getText().toString().trim().equals("")) {
+            Toast.makeText(getContext(), "Password not null", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         String networkSSID = TextWifiSelected.getText().toString();
         String networkPass = EditTextPassword.getText().toString();
@@ -327,15 +381,16 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         }
 
         if (!result){
-            Toast.makeText(getContext(), networkSSID + " Connect fail", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), networkSSID + " Connection fail", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(getContext(), networkSSID + " Connected", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), networkSSID + " Connecting..", Toast.LENGTH_SHORT).show();
+        //TextWifiStatusValue.setText(networkSSID + " " + getResources().getString(R.string.connected));
 
-        TextWifiStatusValue.setText(getResources().getString(R.string.connected));
-        TextWifiStatusValue.setTextColor(getResources().getColor(R.color.colorConnected));
-        ClearBeforeScan();
+        ClearBeforeScan(true);
+
+
     }
 
     private String getScanResultSecurity(WifiManager wifiManager, String ssid) {
@@ -443,6 +498,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
             //WiFi Connection success, return true
             //return true;
+
         } catch (Exception ex) {
             System.out.println(Arrays.toString(ex.getStackTrace()));
             return false;
@@ -496,9 +552,11 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
             //WiFi Connection success, return true
             //return true;
+
         } catch (Exception ex) {
             System.out.println(Arrays.toString(ex.getStackTrace()));
             return false;
         }
     }
+
 }

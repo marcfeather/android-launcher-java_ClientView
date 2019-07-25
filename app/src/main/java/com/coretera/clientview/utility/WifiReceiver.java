@@ -8,6 +8,9 @@ import android.net.wifi.WifiManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.coretera.clientview.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class WifiReceiver extends BroadcastReceiver {
                 deviceList.add(scanResult.SSID);
             }
             //Toast.makeText(context, sb, Toast.LENGTH_SHORT).show();
-            ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, deviceList.toArray());
+            ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.wifi_item, deviceList.toArray());
             wifiDeviceList.setAdapter(arrayAdapter);
         }
     }

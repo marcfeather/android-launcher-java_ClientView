@@ -33,6 +33,7 @@
         android:layout_below="@+id/title_content_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
         android:scrollbars="vertical"
         android:id="@+id/nestedScrollView">
 
@@ -53,15 +54,6 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp">
 
-                <TextView
-                    android:id="@+id/config_wifi_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="WIFI"
-                    android:textColor="@color/colorText1"
-                    android:textSize="16sp"/>
-
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -71,69 +63,97 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="2dp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/wifi_status_label"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/config_wifi_label"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorText2"
-                            android:text="status"
-                            android:textSize="16sp"/>
-
-                        <TextView
-                            android:id="@+id/wifi_status_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/colorDisconnect"
-                            android:text="@string/disconnect"
-                            android:textSize="16sp"/>
+                            android:gravity="start"
+                            android:text="WIFI"
+                            android:textColor="@color/colorText1"
+                            android:textSize="18sp"/>
 
                     </LinearLayout>
 
-                    <Button
-                        android:id = "@+id/wifi_scan"
-                        android:layout_width = "120dp"
-                        android:layout_height = "40dp"
+                    <Switch
+                        android:id="@+id/SwitchWifi"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text = "Scan wifi" />
+                        android:text="Off"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorText2"/>
 
                 </RelativeLayout>
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="2dp"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/Text_Wifi_Status"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:gravity="start"-->
+                        <!--android:text=""-->
+                        <!--android:textColor="@color/colorText1"-->
+                        <!--android:textSize="16sp"/>-->
+
+                <!--</LinearLayout>-->
 
                 <ListView
                     android:id = "@+id/wifiList"
                     android:layout_width = "match_parent"
                     android:layout_height = "400dp"
                     android:layout_marginTop="10dp"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/wifi_selected"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorText2"
-                    android:textSize="16sp"
-                    android:visibility="gone"/>
+                    android:background="#232323"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id = "@+id/wifi_Password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="16dp"
-                    android:textColor="@color/colorText2"
-                    android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/wifi_selected"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorText2"
+                        android:textSize="16sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:visibility="gone"/>
 
-                <Button
-                    android:id = "@+id/wifi_connect"
-                    android:layout_width = "match_parent"
-                    android:layout_height = "40dp"
-                    android:layout_gravity = "bottom"
-                    android:text = "connect"
-                    android:visibility="gone"/>
+                    <EditText
+                        android:id = "@+id/wifi_Password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="16dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/colorText2"
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id = "@+id/wifi_connect"
+                        android:layout_width = "match_parent"
+                        android:layout_height = "40dp"
+                        android:layout_gravity = "bottom"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text = "connect"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -154,7 +174,7 @@
                     android:gravity="start"
                     android:text="PLAY"
                     android:textColor="@color/colorText1"
-                    android:textSize="16sp"/>
+                    android:textSize="18sp"/>
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -173,7 +193,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorText2"
-                            android:text="slide time (sec)"
+                            android:text="Slide Time (second)"
                             android:textSize="16sp"/>
 
                     </LinearLayout>

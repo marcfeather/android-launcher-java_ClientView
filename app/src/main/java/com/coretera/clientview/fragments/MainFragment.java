@@ -190,8 +190,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     };
 
     //timer2
-    CountDownTimer timer2 = new CountDownTimer(10000, 1000) {
-        int countdown = 10;
+    CountDownTimer timer2 = new CountDownTimer(30000, 1000) {
+        int countdown = 30;
 
         public void onTick(long millisUntilFinished) {
             try {
@@ -363,8 +363,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             // Hide the progress dialog
             mProgressDialog.dismiss();
 
+            setting.SaveCurrentPage(mContext, 0);
+
             if (!result) {
                 Toast.makeText(getActivity(), "พบความผิดพลาดในการบันทึกรูปภาพ", Toast.LENGTH_LONG).show();
+                return;
             }
 
             //new InitImageViewTask().execute();
