@@ -14,4 +14,6 @@
     <string name="disconnect">disconnect</string>
     <string name="connectFailed">connect failed</string>
 
+    <string name="version_title">Version 1.0</string>
+
 </resources>

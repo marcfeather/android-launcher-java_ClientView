@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.coretera.clientview.R;
+import com.coretera.clientview.utility.setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,34 @@ public class SlidingImage_Adapter extends PagerAdapter {
 
         //imageView.setImageResource(IMAGES.get(position));
         imageView.setImageBitmap(IMAGES.get(position));
+
+        Integer imageScaleType = setting.GetImageScaleType(this.context);
+        switch (imageScaleType){
+            case 1:
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                break;
+            case 2:
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                break;
+            case 3:
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                break;
+            case 4:
+                imageView.setScaleType(ImageView.ScaleType.FIT_START);
+                break;
+            case 5:
+                imageView.setScaleType(ImageView.ScaleType.FIT_END);
+                break;
+            case 6:
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                break;
+            case 7:
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                break;
+            case 8:
+                imageView.setScaleType(ImageView.ScaleType.MATRIX);
+                break;
+        }
 
         view.addView(imageLayout, 0);
 

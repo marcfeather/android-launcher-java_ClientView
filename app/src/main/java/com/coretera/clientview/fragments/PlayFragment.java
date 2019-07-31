@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,6 +16,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import com.coretera.clientview.Callback;
 import com.coretera.clientview.R;
@@ -36,7 +43,10 @@ public class PlayFragment extends Fragment {
     private static int currentPage = 0;
 
     int fileCount;
-    CountDownTimer timer;
+    CountDownTimer timer, timer2;
+
+    private LinearLayout mLayoutVideo;
+    private VideoView mVideoView;
 
     @Override
     public void onAttach(Context context) {
@@ -62,6 +72,9 @@ public class PlayFragment extends Fragment {
         mContext = getContext();
 
         try {
+            mLayoutVideo = view.findViewById(R.id.layoutVideo);
+            mVideoView = view.findViewById(R.id.videoView1);
+
             InitProgressDialog();
 
         }catch (Exception e){
@@ -182,7 +195,11 @@ public class PlayFragment extends Fragment {
         int sec = setting.GetSlideTime(mContext);
         if (sec == 0) { sec = ConfigFragment.length; }
 
+        int secPlayVideo = setting.GetSlideTime(mContext);
+        if (secPlayVideo == 0) { secPlayVideo = ConfigFragment.videoDefault; }
+
         automateSlider(sec);
+        automateVideoPlayer(secPlayVideo);
     }
 
     private void automateSlider(int secTimeSlide) {
@@ -205,6 +222,44 @@ public class PlayFragment extends Fragment {
         };
 
         timer.start();
+    }
+
+    private void automateVideoPlayer(int secTimeSlide) {
+        timer2 = new CountDownTimer((secTimeSlide * 1000), 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+            @Override
+            public void onFinish() {
+                timer.cancel();
+
+                mLayoutVideo.setVisibility(View.VISIBLE);
+                mPager.setVisibility(View.GONE);
+
+                mVideoView.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() +"/"+R.raw.rain_final));
+                settingVideoView();
+            }
+        };
+
+        timer2.start();
+    }
+
+    private void settingVideoView() {
+        //set VideoView
+        mVideoView.setMediaController(new MediaController(mContext));
+        mVideoView.requestFocus();
+        mVideoView.start();
+
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer vmp) {
+                mLayoutVideo.setVisibility(View.GONE);
+                mPager.setVisibility(View.VISIBLE);
+
+                timer.start();
+                timer2.start();
+            }
+        });
     }
 }
 

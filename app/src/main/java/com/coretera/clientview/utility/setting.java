@@ -100,6 +100,44 @@ public class setting {
         return shared.getInt("slideTime", 0);
     }
 
+    public static void SaveVideoTime(Context context, Integer videoTime){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt("videoTime", videoTime);
+        editor.apply();
+    }
+    public static Integer GetVideoTime(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getInt("videoTime", 0);
+    }
+
+    public static void SaveImageScaleType(Context context, Integer imageScaleType){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt("imageScaleType", imageScaleType);
+        editor.apply();
+    }
+    public static Integer GetImageScaleType(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getInt("imageScaleType", 0);
+    }
+
     public static void SaveCurrentPage(Context context, int currentPage){
         String sharedPrefName = context.getString(R.string.SharedPreferencesName);
 
