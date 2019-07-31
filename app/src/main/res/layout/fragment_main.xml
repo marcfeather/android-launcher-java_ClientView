@@ -7,16 +7,26 @@
     android:gravity="center"
     tools:context="com.coretera.clientview.MainActivity">
 
-    <TextView
-        android:id="@+id/overview_text"
+    <!--<TextView-->
+        <!--android:id="@+id/overview_text"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:keepScreenOn="true"-->
+        <!--android:text="@string/overview_text"-->
+        <!--android:textColor="@color/colorText1"-->
+        <!--android:textSize="50sp"-->
+        <!--android:textStyle="bold" />-->
+
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/overview_text"
-        android:textColor="@color/colorText1"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:src="@drawable/blogo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:scaleType="fitCenter"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,13 +60,33 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/fullscreen_content_controls2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/countdown_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:keepScreenOn="true"
+            android:textColor="@color/colorText2"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_button"
         style="?metaButtonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         tools:ignore="UselessParent">
@@ -65,30 +95,10 @@
             android:id="@+id/button_config"
             style="?metaButtonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_settings_black_24dp"
             android:text="@string/button_config"/>
-
-        <Button
-            android:id="@+id/button_update"
-            style="?metaButtonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:drawableStart="@drawable/ic_get_app_black_24dp"
-            android:text="@string/button_update"
-            android:enabled="false"/>
-
-        <Button
-            android:id="@+id/button_play"
-            style="?metaButtonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:drawableStart="@drawable/ic_play_arrow_black_24dp"
-            android:text="@string/button_play"
-            android:enabled="false"/>
 
     </LinearLayout>
 

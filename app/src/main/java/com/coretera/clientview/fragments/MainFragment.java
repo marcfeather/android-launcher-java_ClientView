@@ -10,6 +10,7 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
@@ -38,7 +42,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     ProgressBar mProgressBar;
     TextView mTextViewloading;
-    Button mButtonUpdate, mButtonPlay;
+    TextView mTextCountdown;
 
     private ProgressDialog mProgressDialog;
     private String folder;
@@ -68,13 +72,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         try {
             view.findViewById(R.id.button_config).setOnClickListener(this);
-            view.findViewById(R.id.button_update).setOnClickListener(this);
-            view.findViewById(R.id.button_play).setOnClickListener(this);
 
             mProgressBar = view.findViewById(R.id.progressBar);
             mTextViewloading = view.findViewById(R.id.loading_text);
-            mButtonUpdate = view.findViewById(R.id.button_update);
-            mButtonPlay = view.findViewById(R.id.button_play);
+            mTextCountdown = view.findViewById(R.id.countdown_text);
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -97,13 +98,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             mProgressBar.setVisibility(View.VISIBLE);
             mTextViewloading.setText("Network connecting..");
 
-            File directory = new File(folder);
-            File[] files = directory.listFiles();
-            if (files != null && files.length > 0) {
-                mButtonPlay.setEnabled(true);
-            }else {
-                mButtonPlay.setEnabled(false);
-            }
+//            File directory = new File(folder);
+//            File[] files = directory.listFiles();
+//            if (files != null && files.length > 0) {
+//                mButtonPlay.setEnabled(true);
+//            }else {
+//                mButtonPlay.setEnabled(false);
+//            }
 
             timer.start();
 
@@ -118,6 +119,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         try {
             timer.cancel();
             timer2.cancel();
+            timer3.cancel();
 
             Fragment fragment;
             switch (v.getId()) {
@@ -126,13 +128,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mCallback.someEvent(fragment);
                     break;
 
-                case R.id.button_update:
-                    UpdateContent();
-                    break;
-
-                case R.id.button_play:
-                    PlayContent();
-                    break;
+//                case R.id.button_update:
+//                    UpdateContent();
+//                    break;
+//
+//                case R.id.button_play:
+//                    PlayContent();
+//                    break;
             }
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -142,6 +144,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     //timer
     CountDownTimer timer = new CountDownTimer(3000, 1000) {
         Boolean result;
+        Integer count = 0;
 
         public void onTick(long millisUntilFinished) {
             try {
@@ -162,30 +165,55 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 if (result){
                     mTextViewloading.setText("Network connected");
-                    mButtonUpdate.setEnabled(true);
+                    //mButtonUpdate.setEnabled(true);
+//                    final Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //UpdateContent();
+//                        }
+//                    }, 3000);
 
-                    File directory = new File(folder);
-                    File[] files = directory.listFiles();
-                    if (files != null && files.length > 0) {
-                        mButtonPlay.setEnabled(true);
-                        timer2.start();
-                    }else {
-                        mButtonPlay.setEnabled(false);
-                    }
+                    mTextCountdown.setVisibility(View.VISIBLE);
+                    timer2.start();
+                    timer.cancel();
+
+//                    File directory = new File(folder);
+//                    File[] files = directory.listFiles();
+//                    if (files != null && files.length > 0) {
+//                        //mButtonPlay.setEnabled(true);
+//                        timer2.start();
+//                    }else {
+//                        //mButtonPlay.setEnabled(false);
+//                    }
 
                 }else {
                     mTextViewloading.setText("Network not connect, Please config wifi for update");
-                    mButtonUpdate.setEnabled(false);
+                    //mButtonUpdate.setEnabled(false);
+                    count++;
 
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mProgressBar.setVisibility(View.VISIBLE);
-                            mTextViewloading.setText("Network connecting..");
+                            if (count < 3) {
+                                mProgressBar.setVisibility(View.VISIBLE);
+                                mTextViewloading.setText("Network connecting..");
+//                                mTextCountdown.setVisibility(View.VISIBLE);
+//                                mTextCountdown.setText(String.valueOf(count));
+                                timer.start();
+                            }else {
+                                //mTextCountdown.setVisibility(View.GONE);
 
-                            timer.start();
-
+                                File directory = new File(folder);
+                                File[] files = directory.listFiles();
+                                if (files != null && files.length > 0) {
+                                    //PlayContent();
+                                    mTextViewloading.setText("Auto play in");
+                                    mTextCountdown.setVisibility(View.VISIBLE);
+                                    timer3.start();
+                                }
+                            }
                         }
                     }, 3000);
                 }
@@ -197,22 +225,35 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     };
 
     //timer2
-    CountDownTimer timer2 = new CountDownTimer(30000, 1000) {
-        int countdown = 30;
-
+    CountDownTimer timer2 = new CountDownTimer(5000, 1000) {
         public void onTick(long millisUntilFinished) {
+            mTextCountdown.setText(""+String.format("%d",
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+        }
+
+        public void onFinish() {
             try {
-                mButtonPlay.setText("Play in " + String.valueOf(countdown));
-                countdown--;
+                mTextCountdown.setVisibility(View.GONE);
+                UpdateContent();
 
             }catch (Exception e){
                 setting.toastException(mContext, e.getMessage());
             }
         }
+    };
+
+    //timer3
+    CountDownTimer timer3 = new CountDownTimer(5000, 1000) {
+        public void onTick(long millisUntilFinished) {
+            mTextCountdown.setText(""+String.format("%d",
+                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+        }
 
         public void onFinish() {
             try {
-                mButtonPlay.setText("Play");
+                mTextCountdown.setVisibility(View.GONE);
                 PlayContent();
 
             }catch (Exception e){
@@ -242,16 +283,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         //setting.SaveExternalStorageDirectory(mContext, folder);
 
-        // Specify some url to download images
-        //final String urlPath = "http://www.freeimageslive.com/galleries/transtech/informationtechnology/pics/";
-        final String urlPath = "http://www.clientview.coretera.co.th/content/";
-
-        final URL url1 = stringToURL(urlPath + "1.jpg");
-
-        String urlFullPath = "http://www.clientview.coretera.co.th/content/test.jpg";
-
         // Execute the async task
-        new DownloadTask().execute(urlFullPath);
+        new DownloadTask().execute();
     }
 
     private void InitProgressDialog() {
@@ -263,7 +296,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         // Progress dialog title
         mProgressDialog.setTitle("อัพเดตข้อมูล");
         // Progress dialog message
-        mProgressDialog.setMessage("กรุณารอซักครู่, กำลังดึงรูปภาพจากเซิร์ฟเวอร์...");
+        mProgressDialog.setMessage("กรุณารอสักครู่, กำลังดึงรูปภาพจากเซิร์ฟเวอร์...");
         mProgressDialog.setCancelable(false);
     }
 
@@ -283,7 +316,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         Second parameter Integer for onProgressUpdate
         Third parameter List<Bitmap> for onPostExecute
      */
-    private class DownloadTask extends AsyncTask<String,Integer,Boolean>{
+    private class DownloadTask extends AsyncTask<Void,Integer,Boolean>{
         // Before the tasks execution
         protected void onPreExecute(){
             // Display the progress dialog on async task start
@@ -292,33 +325,29 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
 
         // Do the task in background/non UI thread
-        protected Boolean doInBackground(String... sUrl){
-            int count = urls.length;
+        protected Boolean doInBackground(Void... value){
             HttpURLConnection connection = null;
             InputStream inputStream;
             Bitmap bitmap;
             Boolean result = false;
 
-//            int countAgain = 0;
-//            for(int i=0;i<count;i++) {
-//                URL currentURL = urls[i];
-//                try {
-//                    // Initialize a new http url connection
-//                    connection = (HttpURLConnection) currentURL.openConnection();
-//
-//                    // Connect the http url connection
-//                    connection.connect();
-//
-//                    countAgain++;
-//                }
-//                catch(IOException e){
-//                    e.printStackTrace();
-//                }
-//            }
+            String url = "http://www.cvm.coretera.co.th";
+
+            ArrayList<HashMap<String,String>> server_result = MysqlConnector.selectAllContent(url);
+            String[] resultList = new String[server_result.size()];
+            //Log.d("selectAllContent", server_result.size()+"");
+            for(int i = 0;i<server_result.size();i++){
+                resultList[i] = server_result.get(i).get("local_path");
+            }
+
+            int count = resultList.length;
 
             // Loop through the urls
             for(int i=0;i<count;i++){
-                URL currentURL = urls[i];
+
+                String urlFullPath = url + resultList[i];
+                URL currentURL = stringToURL(urlFullPath);
+
                 // So download the image from this url
                 try{
                     // Initialize a new http url connection
@@ -338,14 +367,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     result = saveImageToInternalStorage(bitmap,i + 1, folder);
                     if (!result) {
-                        break;
+                        //break;
                     }
 
                     // Publish the async task progress
                     // Added 1, because index start from 0
                     publishProgress((int) (((i+1) / (float) count) * 100));
                     if(isCancelled()){
-                        break;
+                        //break;
                     }
 
                 }catch(IOException e){
@@ -385,8 +414,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             //new InitImageViewTask().execute();
 
-            mButtonPlay.setEnabled(true);
-            PlayContent();
+            //mButtonPlay.setEnabled(true);
+            //PlayContent();
+            mTextViewloading.setText("Updated complete.");
+            mTextCountdown.setVisibility(View.VISIBLE);
+            timer3.start();
         }
     }
 

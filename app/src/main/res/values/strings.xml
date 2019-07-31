@@ -6,8 +6,6 @@
     <string name="overview_text">CORETERA</string>
     <string name="loading_text">loading</string>
     <string name="button_config">config</string>
-    <string name="button_update">update</string>
-    <string name="button_play">play</string>
 
     <string name="config_title">CONFIG</string>
     <string name="button_done">Done</string>
