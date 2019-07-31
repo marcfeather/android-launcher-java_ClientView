@@ -231,6 +231,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         File directory = new File(folder);
         if (!directory.exists()) {
             directory.mkdirs();
+        }else {
+            File[] files = directory.listFiles();
+            for (File file : files) {
+                if(file.exists()){
+                    file.delete();
+                }
+            }
         }
 
         //setting.SaveExternalStorageDirectory(mContext, folder);
@@ -240,50 +247,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         final String urlPath = "http://www.clientview.coretera.co.th/content/";
 
         final URL url1 = stringToURL(urlPath + "1.jpg");
-        final URL url2 = stringToURL(urlPath + "2.jpg");
-        final URL url3 = stringToURL(urlPath + "3.jpg");
-        final URL url4 = stringToURL(urlPath + "4.jpg");
-        final URL url5 = stringToURL(urlPath + "5.jpg");
-        final URL url6 = stringToURL(urlPath + "6.jpg");
-        final URL url7 = stringToURL(urlPath + "7.jpg");
-        final URL url8 = stringToURL(urlPath + "8.jpg");
-        final URL url9 = stringToURL(urlPath + "9.jpg");
-        final URL url10 = stringToURL(urlPath + "10.jpg");
-        final URL url11 = stringToURL(urlPath + "11.jpg");
-        final URL url12 = stringToURL(urlPath + "12.jpg");
-        final URL url13 = stringToURL(urlPath + "13.jpg");
-        final URL url14 = stringToURL(urlPath + "14.jpg");
-        final URL url15 = stringToURL(urlPath + "15.jpg");
-        final URL url16 = stringToURL(urlPath + "16.jpg");
-        final URL url17 = stringToURL(urlPath + "17.jpg");
-        final URL url18 = stringToURL(urlPath + "18.jpg");
-        final URL url19 = stringToURL(urlPath + "19.jpg");
-        final URL url20 = stringToURL(urlPath + "20.jpg");
+
+        String urlFullPath = "http://www.clientview.coretera.co.th/content/test.jpg";
 
         // Execute the async task
-        new DownloadTask()
-                .execute(
-                        url1,
-                        url2,
-                        url3,
-                        url4,
-                        url5,
-                        url6,
-                        url7,
-                        url8,
-                        url9,
-                        url10,
-                        url11,
-                        url12,
-                        url13,
-                        url14,
-                        url15,
-                        url16,
-                        url17,
-                        url18,
-                        url19,
-                        url20
-                );
+        new DownloadTask().execute(urlFullPath);
     }
 
     private void InitProgressDialog() {
@@ -315,7 +283,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         Second parameter Integer for onProgressUpdate
         Third parameter List<Bitmap> for onPostExecute
      */
-    private class DownloadTask extends AsyncTask<URL,Integer,Boolean>{
+    private class DownloadTask extends AsyncTask<String,Integer,Boolean>{
         // Before the tasks execution
         protected void onPreExecute(){
             // Display the progress dialog on async task start
@@ -324,12 +292,29 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
 
         // Do the task in background/non UI thread
-        protected Boolean doInBackground(URL...urls){
+        protected Boolean doInBackground(String... sUrl){
             int count = urls.length;
             HttpURLConnection connection = null;
             InputStream inputStream;
             Bitmap bitmap;
             Boolean result = false;
+
+//            int countAgain = 0;
+//            for(int i=0;i<count;i++) {
+//                URL currentURL = urls[i];
+//                try {
+//                    // Initialize a new http url connection
+//                    connection = (HttpURLConnection) currentURL.openConnection();
+//
+//                    // Connect the http url connection
+//                    connection.connect();
+//
+//                    countAgain++;
+//                }
+//                catch(IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
 
             // Loop through the urls
             for(int i=0;i<count;i++){
@@ -351,7 +336,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     // Convert BufferedInputStream to Bitmap object
                     bitmap = BitmapFactory.decodeStream(bufferedInputStream);
 
-                    result = saveImageToInternalStorage(bitmap,i,folder);
+                    result = saveImageToInternalStorage(bitmap,i + 1, folder);
                     if (!result) {
                         break;
                     }
@@ -393,7 +378,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             setting.SaveCurrentPage(mContext, 0);
 
             if (!result) {
-                Toast.makeText(getActivity(), "พบความผิดพลาดในการบันทึกรูปภาพ", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "พบความผิดพลาดในการบันทึกรูปภาพ", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Update failed", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -417,7 +403,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 //        file = new File(file, "UniqueFileName"+ index+".jpg");
 
         //Extract file name from URL
-        String fileName = String.valueOf(index + 1) + ".jpg";
+        String fileName = String.valueOf(index) + ".jpg";
 
         try{
             // Initialize a new OutputStream
