@@ -205,7 +205,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
 
         videoTime = setting.GetVideoTime(getContext());
-        if (videoTime == 0) { videoTime = videoLength; }
+        if (videoTime == 0) { videoTime = videoDefault; }
         mTextViewVideoTime.setText(String.valueOf(videoTime));
     }
 
