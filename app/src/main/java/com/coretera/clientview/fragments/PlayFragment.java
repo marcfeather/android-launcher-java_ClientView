@@ -195,7 +195,7 @@ public class PlayFragment extends Fragment {
         int sec = setting.GetSlideTime(mContext);
         if (sec == 0) { sec = ConfigFragment.length; }
 
-        int secPlayVideo = setting.GetSlideTime(mContext);
+        int secPlayVideo = setting.GetVideoTime(mContext);
         if (secPlayVideo == 0) { secPlayVideo = ConfigFragment.videoDefault; }
 
         automateSlider(sec);

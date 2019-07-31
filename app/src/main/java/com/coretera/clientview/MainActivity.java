@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements Callback{
             , REQUEST_ACCESS_NETWORK_STATE = 3
             , REQUEST_INTERNET = 4
             , REQUEST_ACCESS_WIFI_STATE = 5
-            , REQUEST_CHANGE_WIFI_STATE = 6
-            , REQUEST_ACCESS_COARSE_LOCATION = 7
-            , REQUEST_ACCESS_FINE_LOCATION = 8;
+            , REQUEST_CHANGE_WIFI_STATE = 6;
+//            , REQUEST_ACCESS_COARSE_LOCATION = 7
+//            , REQUEST_ACCESS_FINE_LOCATION = 8;
 
     private static String[] PERMISSIONS_WRITE_EXTERNAL_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static String[] PERMISSIONS_READ_EXTERNAL_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements Callback{
     private static String[] PERMISSIONS_INTERNET = {Manifest.permission.INTERNET};
     private static String[] PERMISSIONS_ACCESS_WIFI_STATE = {Manifest.permission.ACCESS_WIFI_STATE};
     private static String[] PERMISSIONS_CHANGE_WIFI_STATE = {Manifest.permission.CHANGE_WIFI_STATE};
-    private static String[] PERMISSIONS_ACCESS_COARSE_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION};
-    private static String[] PERMISSIONS_ACCESS_FINE_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
+//    private static String[] PERMISSIONS_ACCESS_COARSE_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION};
+//    private static String[] PERMISSIONS_ACCESS_FINE_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,20 +124,20 @@ public class MainActivity extends AppCompatActivity implements Callback{
                     Toast.makeText(this, "Cannot CHANGE_WIFI_STATE", Toast.LENGTH_SHORT).show();
                 }
             }
-            case REQUEST_ACCESS_COARSE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length <= 0
-                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Cannot ACCESS_COARSE_LOCATION", Toast.LENGTH_SHORT).show();
-                }
-            }
-            case REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length <= 0
-                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Cannot ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
-                }
-            }
+//            case REQUEST_ACCESS_COARSE_LOCATION: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length <= 0
+//                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(this, "Cannot ACCESS_COARSE_LOCATION", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//            case REQUEST_ACCESS_FINE_LOCATION: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length <= 0
+//                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(this, "Cannot ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
+//                }
+//            }
         }
     }
 
@@ -187,16 +187,16 @@ public class MainActivity extends AppCompatActivity implements Callback{
             ActivityCompat.requestPermissions(activity, PERMISSIONS_CHANGE_WIFI_STATE, REQUEST_CHANGE_WIFI_STATE);
         }
 
-        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_ACCESS_COARSE_LOCATION, REQUEST_ACCESS_COARSE_LOCATION);
-        }
-
-        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_ACCESS_FINE_LOCATION, REQUEST_ACCESS_FINE_LOCATION);
-        }
+//        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//            ActivityCompat.requestPermissions(activity, PERMISSIONS_ACCESS_COARSE_LOCATION, REQUEST_ACCESS_COARSE_LOCATION);
+//        }
+//
+//        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//            ActivityCompat.requestPermissions(activity, PERMISSIONS_ACCESS_FINE_LOCATION, REQUEST_ACCESS_FINE_LOCATION);
+//        }
     }
 }

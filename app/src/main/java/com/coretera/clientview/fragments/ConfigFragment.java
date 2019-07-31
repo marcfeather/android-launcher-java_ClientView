@@ -236,6 +236,10 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             case 8:
                 ret = "MATRIX";
                 break;
+            default:
+                ret = "CENTER INSIDE";
+                break;
+
         }
         return ret;
     }

@@ -4,8 +4,8 @@
 
     <uses-permission android:name = "android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name = "android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION"/> <!-- for Android 6 and above -->
-    <uses-permission android:name = "android.permission.ACCESS_FINE_LOCATION"/> <!-- for Android 6 and above -->
+    <!--<uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt;-->
+    <!--<uses-permission android:name = "android.permission.ACCESS_FINE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt;-->
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />

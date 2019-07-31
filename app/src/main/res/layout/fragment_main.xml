@@ -26,7 +26,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
-        android:scaleType="fitCenter"/>
+        android:scaleType="centerInside"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,6 +99,14 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_settings_black_24dp"
             android:text="@string/button_config"/>
+
+        <!--<Button-->
+            <!--android:id="@+id/button_config"-->
+            <!--android:layout_width="150dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:gravity="center"-->
+            <!--android:drawableStart="@drawable/ic_settings_black_24dp"-->
+            <!--android:text="@string/button_config"/>-->
 
     </LinearLayout>
 
