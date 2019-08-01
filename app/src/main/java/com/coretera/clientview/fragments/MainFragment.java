@@ -87,6 +87,10 @@ public class MainFragment extends Fragment {
 //                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                            .setAction("Action", null).show();
 
+                    timer.cancel();
+                    timer2.cancel();
+                    timer3.cancel();
+
                     Fragment fragment = new ConfigFragment();
                     mCallback.someEvent(fragment);
                 }
@@ -123,7 +127,7 @@ public class MainFragment extends Fragment {
 
         //if (setting.GetIsSetConfig(getContext())){
             mProgressBar.setVisibility(View.VISIBLE);
-            mTextViewloading.setText("Network connecting..");
+            mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
 
 //            File directory = new File(folder);
 //            File[] files = directory.listFiles();
@@ -191,7 +195,7 @@ public class MainFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
 
                 if (result){
-                    mTextViewloading.setText("Network connected");
+                    mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
                     //mButtonUpdate.setEnabled(true);
 //                    final Handler handler = new Handler();
 //                    handler.postDelayed(new Runnable() {
@@ -215,7 +219,7 @@ public class MainFragment extends Fragment {
 //                    }
 
                 }else {
-                    mTextViewloading.setText("Network not connect, Please config wifi for update");
+                    mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล");
                     //mButtonUpdate.setEnabled(false);
                     count++;
 
@@ -225,7 +229,7 @@ public class MainFragment extends Fragment {
                         public void run() {
                             if (count < 3) {
                                 mProgressBar.setVisibility(View.VISIBLE);
-                                mTextViewloading.setText("Network connecting..");
+                                mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
 //                                mTextCountdown.setVisibility(View.VISIBLE);
 //                                mTextCountdown.setText(String.valueOf(count));
                                 timer.start();
@@ -236,7 +240,7 @@ public class MainFragment extends Fragment {
                                 File[] files = directory.listFiles();
                                 if (files != null && files.length > 0) {
                                     //PlayContent();
-                                    mTextViewloading.setText("Auto play in");
+                                    mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
                                     mTextCountdown.setVisibility(View.VISIBLE);
                                     timer3.start();
                                 }
@@ -252,7 +256,7 @@ public class MainFragment extends Fragment {
     };
 
     //timer2
-    CountDownTimer timer2 = new CountDownTimer(5000, 1000) {
+    CountDownTimer timer2 = new CountDownTimer(6000, 1000) {
         public void onTick(long millisUntilFinished) {
             mTextCountdown.setText(""+String.format("%d",
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
@@ -261,6 +265,7 @@ public class MainFragment extends Fragment {
 
         public void onFinish() {
             try {
+                mTextViewloading.setVisibility(View.GONE);
                 mTextCountdown.setVisibility(View.GONE);
                 UpdateContent();
 
@@ -271,7 +276,7 @@ public class MainFragment extends Fragment {
     };
 
     //timer3
-    CountDownTimer timer3 = new CountDownTimer(5000, 1000) {
+    CountDownTimer timer3 = new CountDownTimer(6000, 1000) {
         public void onTick(long millisUntilFinished) {
             mTextCountdown.setText(""+String.format("%d",
                     TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
@@ -280,6 +285,7 @@ public class MainFragment extends Fragment {
 
         public void onFinish() {
             try {
+                mTextViewloading.setVisibility(View.GONE);
                 mTextCountdown.setVisibility(View.GONE);
                 PlayContent();
 
@@ -330,7 +336,7 @@ public class MainFragment extends Fragment {
         // Progress dialog title
         mProgressDialog.setTitle("อัพเดตข้อมูล");
         // Progress dialog message
-        mProgressDialog.setMessage("กรุณารอสักครู่, กำลังดึงรูปภาพจากเซิร์ฟเวอร์...");
+        mProgressDialog.setMessage("กรุณารอสักครู่, กำลังดึงข้อมูลจากเซิร์ฟเวอร์...");
         mProgressDialog.setCancelable(false);
     }
 
@@ -376,10 +382,20 @@ public class MainFragment extends Fragment {
 
             int count = resultList.length;
 
+            count = count + 1; //have video
+
             // Loop through the urls
             for(int i=0;i<count;i++){
+                String urlFullPath;
 
-                String urlFullPath = url + resultList[i];
+                //have video
+                if (i == (count-1)) {
+                    urlFullPath = url + "/video/video.mp4";
+                }else {
+                    urlFullPath = url + resultList[i];
+                }
+
+                //String urlFullPath = url + resultList[i];
                 URL currentURL = stringToURL(urlFullPath);
 
                 // So download the image from this url
@@ -396,12 +412,22 @@ public class MainFragment extends Fragment {
                     // Initialize a new BufferedInputStream from InputStream
                     BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
 
-                    // Convert BufferedInputStream to Bitmap object
-                    bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+                    //have video
+                    if (i == (count-1)) {
+                        result = saveVideoToInternalStorage(bufferedInputStream, "video.mp4", videoFolder);
+                        if (!result) {
+                            //break;
+                        }
 
-                    result = saveImageToInternalStorage(bitmap,i + 1, pictureFolder);
-                    if (!result) {
-                        //break;
+                    }else {
+                        // Convert BufferedInputStream to Bitmap object
+                        bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+                        bufferedInputStream.close();
+
+                        result = saveImageToInternalStorage(bitmap, i + 1, pictureFolder);
+                        if (!result) {
+                            //break;
+                        }
                     }
 
                     // Publish the async task progress
@@ -450,6 +476,7 @@ public class MainFragment extends Fragment {
 
             //mButtonPlay.setEnabled(true);
             //PlayContent();
+            mTextViewloading.setVisibility(View.VISIBLE);
             mTextViewloading.setText("Updated complete.");
             mTextCountdown.setVisibility(View.VISIBLE);
             timer3.start();
@@ -487,6 +514,35 @@ public class MainFragment extends Fragment {
 
             // Closes the stream
             stream.close();
+
+        }catch (IOException e) // Catch the exception
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected Boolean saveVideoToInternalStorage(BufferedInputStream bufferedInputStream, String _fileName, String folder){
+        //Extract file name from URL
+        String fileName = _fileName;
+
+        try{
+            OutputStream stream = new FileOutputStream(folder + fileName);
+
+            byte dataBuffer[] = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bufferedInputStream.read(dataBuffer, 0, 1024)) != -1) {
+                stream.write(dataBuffer, 0, bytesRead);
+            }
+
+            // Flushes the stream
+            stream.flush();
+
+            // Closes the stream
+            stream.close();
+            bufferedInputStream.close();
 
         }catch (IOException e) // Catch the exception
         {
