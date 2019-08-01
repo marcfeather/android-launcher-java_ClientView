@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class MainFragment extends Fragment implements View.OnClickListener {
+//public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment {
 
     Callback mCallback;
     Context mContext;
@@ -45,7 +48,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     TextView mTextCountdown;
 
     private ProgressDialog mProgressDialog;
-    private String folder;
+    private String pictureFolder, videoFolder;
 
     @Override
     public void onAttach(Context context) {
@@ -71,11 +74,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mContext = getContext();
 
         try {
-            view.findViewById(R.id.button_config).setOnClickListener(this);
+            //view.findViewById(R.id.button_config).setOnClickListener(this);
 
             mProgressBar = view.findViewById(R.id.progressBar);
             mTextViewloading = view.findViewById(R.id.loading_text);
             mTextCountdown = view.findViewById(R.id.countdown_text);
+
+            FloatingActionButton fab = view.findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                            .setAction("Action", null).show();
+
+                    Fragment fragment = new ConfigFragment();
+                    mCallback.someEvent(fragment);
+                }
+            });
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -88,9 +103,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //External directory path to save file
-        folder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/";
-        setting.SaveExternalStorageDirectory(mContext, folder);
+        //External Picture directory path to save file
+        pictureFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Picture/";
+        setting.SaveExternalStorageDirectoryPicture(mContext, pictureFolder);
+        File directory = new File(pictureFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        //External Video directory path to save file
+        videoFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Video/";
+        setting.SaveExternalStorageDirectoryVideo(mContext, videoFolder);
+        directory = new File(videoFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         mTextViewloading.setVisibility(View.VISIBLE);
 
@@ -114,32 +141,32 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 //        }
     }
 
-    @Override
-    public void onClick(View v) {
-        try {
-            timer.cancel();
-            timer2.cancel();
-            timer3.cancel();
-
-            Fragment fragment;
-            switch (v.getId()) {
-                case R.id.button_config:
-                    fragment = new ConfigFragment();
-                    mCallback.someEvent(fragment);
-                    break;
-
-//                case R.id.button_update:
-//                    UpdateContent();
+//    @Override
+//    public void onClick(View v) {
+//        try {
+//            timer.cancel();
+//            timer2.cancel();
+//            timer3.cancel();
+//
+//            Fragment fragment;
+//            switch (v.getId()) {
+//                case R.id.button_config:
+//                    fragment = new ConfigFragment();
+//                    mCallback.someEvent(fragment);
 //                    break;
 //
-//                case R.id.button_play:
-//                    PlayContent();
-//                    break;
-            }
-        }catch (Exception e){
-            setting.toastException(mContext, e.getMessage());
-        }
-    }
+////                case R.id.button_update:
+////                    UpdateContent();
+////                    break;
+////
+////                case R.id.button_play:
+////                    PlayContent();
+////                    break;
+//            }
+//        }catch (Exception e){
+//            setting.toastException(mContext, e.getMessage());
+//        }
+//    }
 
     //timer
     CountDownTimer timer = new CountDownTimer(3000, 1000) {
@@ -205,7 +232,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }else {
                                 //mTextCountdown.setVisibility(View.GONE);
 
-                                File directory = new File(folder);
+                                File directory = new File(pictureFolder);
                                 File[] files = directory.listFiles();
                                 if (files != null && files.length > 0) {
                                     //PlayContent();
@@ -266,13 +293,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     {
         InitProgressDialog();
 
-        //External directory path to save file
-        //folder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/";
-        //Create androiddeft folder if it does not exist
-        File directory = new File(folder);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }else {
+        //External Picture directory path to delete file
+        File directory = new File(pictureFolder);
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            for (File file : files) {
+                if(file.exists()){
+                    file.delete();
+                }
+            }
+        }
+        
+        //External Video directory path to delete file
+        directory = new File(videoFolder);
+        if (directory.exists()) {
             File[] files = directory.listFiles();
             for (File file : files) {
                 if(file.exists()){
@@ -365,7 +399,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     // Convert BufferedInputStream to Bitmap object
                     bitmap = BitmapFactory.decodeStream(bufferedInputStream);
 
-                    result = saveImageToInternalStorage(bitmap,i + 1, folder);
+                    result = saveImageToInternalStorage(bitmap,i + 1, pictureFolder);
                     if (!result) {
                         //break;
                     }

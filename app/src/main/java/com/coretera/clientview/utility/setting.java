@@ -157,7 +157,7 @@ public class setting {
         return shared.getInt("currentPage", 0);
     }
 
-    public static void SaveExternalStorageDirectory(Context context, String externalStorageDirectory){
+    public static void SaveExternalStorageDirectoryPicture(Context context, String externalStorageDirectoryPicture){
         String sharedPrefName = context.getString(R.string.SharedPreferencesName);
 
         // Get SharedPreferences
@@ -165,14 +165,33 @@ public class setting {
 
         //Save SharedPreferences
         SharedPreferences.Editor editor = shared.edit();
-        editor.putString("externalStorageDirectory", externalStorageDirectory);
+        editor.putString("externalStorageDirectoryPicture", externalStorageDirectoryPicture);
         editor.apply();
     }
-    public static String GetExternalStorageDirectory(Context context){
+    public static String GetExternalStorageDirectoryPicture(Context context){
         String sharedPrefName = context.getString(R.string.SharedPreferencesName);
 
         // Get SharedPreferences
         SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
-        return shared.getString("externalStorageDirectory", "");
+        return shared.getString("externalStorageDirectoryPicture", "");
+    }
+
+    public static void SaveExternalStorageDirectoryVideo(Context context, String externalStorageDirectoryVideo){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("externalStorageDirectoryVideo", externalStorageDirectoryVideo);
+        editor.apply();
+    }
+    public static String GetExternalStorageDirectoryVideo(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("externalStorageDirectoryVideo", "");
     }
 }

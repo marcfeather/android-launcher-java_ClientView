@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -48,6 +49,10 @@ public class PlayFragment extends Fragment {
     private LinearLayout mLayoutVideo;
     private VideoView mVideoView;
 
+    private String videoFolder;
+
+    private MediaController mMediaController;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -74,6 +79,8 @@ public class PlayFragment extends Fragment {
         try {
             mLayoutVideo = view.findViewById(R.id.layoutVideo);
             mVideoView = view.findViewById(R.id.videoView1);
+
+            mMediaController = new MediaController(mContext);
 
             InitProgressDialog();
 
@@ -134,8 +141,8 @@ public class PlayFragment extends Fragment {
 
     private List<Bitmap> GetLocalImage() {
         List<Bitmap> listBitmap = new ArrayList<>();
-        String folder = setting.GetExternalStorageDirectory(mContext);
-        File directory = new File(folder);
+        String folderImage = setting.GetExternalStorageDirectoryPicture(mContext);
+        File directory = new File(folderImage);
 
         File[] files = directory.listFiles();
         Bitmap bitmap;
@@ -182,10 +189,12 @@ public class PlayFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         Log.d("Awesome Tag", "ACTION_DOWN");
                         timer.cancel();
+                        timer2.cancel();
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.d("Awesome Tag", "ACTION_UP");
                         timer.start();
+                        timer2.start();
                         break;
                 }
                 return false;
@@ -225,6 +234,7 @@ public class PlayFragment extends Fragment {
     }
 
     private void automateVideoPlayer(int secTimeSlide) {
+
         timer2 = new CountDownTimer((secTimeSlide * 1000), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -236,30 +246,90 @@ public class PlayFragment extends Fragment {
                 mLayoutVideo.setVisibility(View.VISIBLE);
                 mPager.setVisibility(View.GONE);
 
-                mVideoView.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() +"/"+R.raw.rain_final));
                 settingVideoView();
+
+                //mVideoView.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() +"/"+R.raw.rain_final));
             }
         };
 
-        timer2.start();
+        //timer2.start();
+
+        videoFolder = setting.GetExternalStorageDirectoryVideo(mContext);
+        File directory = new File(videoFolder);
+        File[] files = directory.listFiles();
+        if (files != null && files.length > 0) {
+//            for (File file : files) {
+//                if(file.exists()){
+//                    mVideoView.setVideoURI(file);
+//                }
+//            }
+
+            String filePath = videoFolder + "video.mp4";
+            File file = new File(filePath);
+            if(file.exists()){
+                mVideoView.setVideoPath(filePath);
+                timer2.start();
+            }
+        }
     }
 
     private void settingVideoView() {
         //set VideoView
-        mVideoView.setMediaController(new MediaController(mContext));
+        //mVideoView.setMediaController(new MediaController(mContext));
+        mVideoView.setMediaController(mMediaController);
         mVideoView.requestFocus();
         mVideoView.start();
+
+        mVideoView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent)
+            {
+//                if (mVideoView.isPlaying())
+//                {
+//                    mVideoView.pause();
+//                    if (!getActivity().getActionBar().isShowing())
+//                    {
+//                        getActivity().getActionBar().show();
+//                        mMediaController.show(0);
+//                    }
+//                    //position = mVideoView.getCurrentPosition();
+//                    return false;
+//                }
+//                else
+//                {
+//                    if (getActivity().getActionBar().isShowing())
+//                    {
+//                        getActivity().getActionBar().hide();
+//                        mMediaController.hide();
+//                    }
+//                    //mVideoView.seekTo(position);
+//                    mVideoView.start();
+//                    return false;
+//                }
+
+                mVideoView.stopPlayback();
+
+                videoClosed();
+
+                return false;
+            }
+        });
 
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer vmp) {
-                mLayoutVideo.setVisibility(View.GONE);
-                mPager.setVisibility(View.VISIBLE);
-
-                timer.start();
-                timer2.start();
+                videoClosed();
             }
         });
+    }
+
+    private void videoClosed(){
+        mLayoutVideo.setVisibility(View.GONE);
+        mPager.setVisibility(View.VISIBLE);
+
+        timer.start();
+        timer2.start();
     }
 }
 
