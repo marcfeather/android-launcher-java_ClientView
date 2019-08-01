@@ -194,7 +194,8 @@ public class PlayFragment extends Fragment {
                     case MotionEvent.ACTION_UP:
                         Log.d("Awesome Tag", "ACTION_UP");
                         timer.start();
-                        timer2.start();
+                        //timer2.start();
+                        checkVideoExists();
                         break;
                 }
                 return false;
@@ -264,12 +265,16 @@ public class PlayFragment extends Fragment {
 //                }
 //            }
 
-            String filePath = videoFolder + "video.mp4";
-            File file = new File(filePath);
-            if(file.exists()){
-                mVideoView.setVideoPath(filePath);
-                timer2.start();
-            }
+            checkVideoExists();
+        }
+    }
+
+    private void checkVideoExists() {
+        String filePath = videoFolder + "video.mp4";
+        File file = new File(filePath);
+        if(file.exists()){
+            mVideoView.setVideoPath(filePath);
+            timer2.start();
         }
     }
 
