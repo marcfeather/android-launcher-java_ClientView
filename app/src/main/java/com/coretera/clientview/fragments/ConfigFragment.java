@@ -202,6 +202,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         mTextViewSlideTime.setText(String.valueOf(slideTime));
 
         scaleTypeId = setting.GetImageScaleType(getContext());
+        if (scaleTypeId == 0) { scaleTypeId = 1; }
         mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
 
         videoTime = setting.GetVideoTime(getContext());
@@ -213,10 +214,10 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         String ret = "";
         switch (scaleTypeId){
             case 1:
-                ret = "CENTER";
+                ret = "CENTER INSIDE";
                 break;
             case 2:
-                ret = "CENTER INSIDE";
+                ret = "CENTER";
                 break;
             case 3:
                 ret = "CENTER CROP";
@@ -236,10 +237,6 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             case 8:
                 ret = "MATRIX";
                 break;
-            default:
-                ret = "CENTER INSIDE";
-                break;
-
         }
         return ret;
     }

@@ -231,7 +231,7 @@
                             android:id = "@+id/slide_time_decrease"
                             android:layout_width = "40dp"
                             android:layout_height = "40dp"
-                            android:text = "-" />
+                            android:drawableStart="@drawable/ic_chevron_left_black_24dp" />
 
                         <TextView
                             android:id="@+id/slide_time_value"
@@ -247,7 +247,7 @@
                             android:id = "@+id/slide_time_increase"
                             android:layout_width = "40dp"
                             android:layout_height = "40dp"
-                            android:text = "+" />
+                            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>
 
                     </LinearLayout>
 
@@ -360,7 +360,7 @@
                             android:id = "@+id/slide_videoTime_decrease"
                             android:layout_width = "40dp"
                             android:layout_height = "40dp"
-                            android:text = "-" />
+                            android:drawableStart="@drawable/ic_chevron_left_black_24dp" />
 
                         <TextView
                             android:id="@+id/slide_videoTime_value"
@@ -376,7 +376,7 @@
                             android:id = "@+id/slide_videoTime_increase"
                             android:layout_width = "40dp"
                             android:layout_height = "40dp"
-                            android:text = "+" />
+                            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>
 
                     </LinearLayout>
 
@@ -402,6 +402,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
+            android:textSize="18sp"
             android:text="@string/button_done"/>
 
     </LinearLayout>

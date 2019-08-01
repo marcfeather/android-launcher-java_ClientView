@@ -44,7 +44,7 @@ public class PlayFragment extends Fragment {
     private static int currentPage = 0;
 
     int fileCount;
-    CountDownTimer timer, timer2;
+    CountDownTimer timerSlider, timerVideoStart;
 
     private LinearLayout mLayoutVideo;
     private VideoView mVideoView;
@@ -108,7 +108,7 @@ public class PlayFragment extends Fragment {
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setIndeterminate(false);
         // Progress dialog message
-        mProgressDialog.setMessage("โหลดรูปภาพ..");
+        mProgressDialog.setMessage("กำลังโหลดข้อมูล..");
         mProgressDialog.setCancelable(false);
     }
 
@@ -176,8 +176,8 @@ public class PlayFragment extends Fragment {
             public void onPageSelected(int position) {
                 setting.SaveCurrentPage(mContext, position);
 
-                timer.cancel();
-                timer.start();
+                timerSlider.cancel();
+                timerSlider.start();
             }
         });
 
@@ -188,12 +188,12 @@ public class PlayFragment extends Fragment {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d("Awesome Tag", "ACTION_DOWN");
-                        timer.cancel();
-                        timer2.cancel();
+                        timerSlider.cancel();
+                        timerVideoStart.cancel();
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.d("Awesome Tag", "ACTION_UP");
-                        timer.start();
+                        timerSlider.start();
                         //timer2.start();
                         checkVideoExists();
                         break;
@@ -213,7 +213,7 @@ public class PlayFragment extends Fragment {
     }
 
     private void automateSlider(int secTimeSlide) {
-        timer = new CountDownTimer((secTimeSlide * 1000), 1000) {
+        timerSlider = new CountDownTimer((secTimeSlide * 1000), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
             }
@@ -231,18 +231,18 @@ public class PlayFragment extends Fragment {
             }
         };
 
-        timer.start();
+        timerSlider.start();
     }
 
     private void automateVideoPlayer(int secTimeSlide) {
 
-        timer2 = new CountDownTimer((secTimeSlide * 1000), 1000) {
+        timerVideoStart = new CountDownTimer((secTimeSlide * 1000), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
             }
             @Override
             public void onFinish() {
-                timer.cancel();
+                timerSlider.cancel();
 
                 mLayoutVideo.setVisibility(View.VISIBLE);
                 mPager.setVisibility(View.GONE);
@@ -274,7 +274,7 @@ public class PlayFragment extends Fragment {
         File file = new File(filePath);
         if(file.exists()){
             mVideoView.setVideoPath(filePath);
-            timer2.start();
+            timerVideoStart.start();
         }
     }
 
@@ -333,8 +333,8 @@ public class PlayFragment extends Fragment {
         mLayoutVideo.setVisibility(View.GONE);
         mPager.setVisibility(View.VISIBLE);
 
-        timer.start();
-        timer2.start();
+        timerSlider.start();
+        timerVideoStart.start();
     }
 }
 

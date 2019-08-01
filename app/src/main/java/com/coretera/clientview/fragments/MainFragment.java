@@ -46,6 +46,9 @@ public class MainFragment extends Fragment {
     ProgressBar mProgressBar;
     TextView mTextViewloading;
     TextView mTextCountdown;
+    FloatingActionButton fab;
+
+    CountDownTimer timerToCheckNetwork, timerToUpdate, timerToPlay, timerDelay;
 
     private ProgressDialog mProgressDialog;
     private String pictureFolder, videoFolder;
@@ -74,25 +77,24 @@ public class MainFragment extends Fragment {
         mContext = getContext();
 
         try {
-            //view.findViewById(R.id.button_config).setOnClickListener(this);
+            //view.findViewById(R.id.fab).setOnClickListener(this);
 
             mProgressBar = view.findViewById(R.id.progressBar);
             mTextViewloading = view.findViewById(R.id.loading_text);
             mTextCountdown = view.findViewById(R.id.countdown_text);
-
-            FloatingActionButton fab = view.findViewById(R.id.fab);
+            fab = view.findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 //                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                            .setAction("Action", null).show();
 
-                    timer.cancel();
-                    timer2.cancel();
-                    timer3.cancel();
+                    timerToCheckNetwork.cancel();
+                    timerDelay.cancel();
+                    timerToUpdate.cancel();
+                    timerToPlay.cancel();
 
-                    Fragment fragment = new ConfigFragment();
-                    mCallback.someEvent(fragment);
+                    mCallback.someEvent(new ConfigFragment());
                 }
             });
 
@@ -137,12 +139,19 @@ public class MainFragment extends Fragment {
 //                mButtonPlay.setEnabled(false);
 //            }
 
-            timer.start();
+        setTimerToCheckNetwork(3);
+        setTimerDelay(3);
+        setTimerToUpdateContent(6);
+        setTimerToPlayContent(6);
+
+        timerToCheckNetwork.start();
 
 //        }else {
 //            mProgressBar.setVisibility(View.GONE);
 //            mTextViewloading.setText("System not config, Please config system");
 //        }
+
+
     }
 
 //    @Override
@@ -154,7 +163,7 @@ public class MainFragment extends Fragment {
 //
 //            Fragment fragment;
 //            switch (v.getId()) {
-//                case R.id.button_config:
+//                case R.id.fab:
 //                    fragment = new ConfigFragment();
 //                    mCallback.someEvent(fragment);
 //                    break;
@@ -172,31 +181,32 @@ public class MainFragment extends Fragment {
 //        }
 //    }
 
-    //timer
-    CountDownTimer timer = new CountDownTimer(3000, 1000) {
-        Boolean result;
-        Integer count = 0;
+    //setTimerToCheckNetwork
+    private void setTimerToCheckNetwork(int sec) {
+        timerToCheckNetwork = new CountDownTimer((sec * 1000), 1000) {
+            Boolean result;
+            //Integer count = 0;
 
-        public void onTick(long millisUntilFinished) {
-            try {
-                if (setting.isConnectedToNetwork(mContext) && setting.isOnline()){
-                    result = true;
-                }else {
-                    result = false;
+            public void onTick(long millisUntilFinished) {
+                try {
+                    if (setting.isConnectedToNetwork(mContext) && setting.isOnline()) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+
+                } catch (Exception e) {
+                    setting.toastException(mContext, e.getMessage());
                 }
-
-            }catch (Exception e){
-                setting.toastException(mContext, e.getMessage());
             }
-        }
 
-        public void onFinish() {
-            try {
-                mProgressBar.setVisibility(View.GONE);
+            public void onFinish() {
+                try {
+                    mProgressBar.setVisibility(View.GONE);
 
-                if (result){
-                    mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
-                    //mButtonUpdate.setEnabled(true);
+                    if (result) {
+                        mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
+                        //mButtonUpdate.setEnabled(true);
 //                    final Handler handler = new Handler();
 //                    handler.postDelayed(new Runnable() {
 //                        @Override
@@ -205,9 +215,9 @@ public class MainFragment extends Fragment {
 //                        }
 //                    }, 3000);
 
-                    mTextCountdown.setVisibility(View.VISIBLE);
-                    timer2.start();
-                    timer.cancel();
+                        mTextCountdown.setVisibility(View.VISIBLE);
+                        timerToUpdate.start();
+                        //timer.cancel();
 
 //                    File directory = new File(folder);
 //                    File[] files = directory.listFiles();
@@ -218,82 +228,127 @@ public class MainFragment extends Fragment {
 //                        //mButtonPlay.setEnabled(false);
 //                    }
 
-                }else {
-                    mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล");
-                    //mButtonUpdate.setEnabled(false);
-                    count++;
+                    } else {
+                        mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล");
+                        //mButtonUpdate.setEnabled(false);
+                        //count++;
 
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (count < 3) {
-                                mProgressBar.setVisibility(View.VISIBLE);
-                                mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
+//                        final Handler handler = new Handler();
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            @Override
+//                            public void run() {
+//                                if (count < 3) {
+//                                    mProgressBar.setVisibility(View.VISIBLE);
+//                                    mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
+////                                mTextCountdown.setVisibility(View.VISIBLE);
+////                                mTextCountdown.setText(String.valueOf(count));
+//                                    start();
+//                                } else {
+//                                    //mTextCountdown.setVisibility(View.GONE);
+//
+//                                    File directory = new File(pictureFolder);
+//                                    File[] files = directory.listFiles();
+//                                    if (files != null && files.length > 0) {
+//                                        //PlayContent();
+//                                        mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
+//                                        mTextCountdown.setVisibility(View.VISIBLE);
+//                                        timerToPlay.start();
+//                                    }
+//                                }
+//                            }
+//                        }, 3000);
+
+                        timerDelay.start();
+                    }
+
+                } catch (Exception e) {
+                    setting.toastException(mContext, e.getMessage());
+                }
+            }
+        };
+    }
+
+    //setTimerDelay
+    private void setTimerDelay(int sec) {
+        timerDelay = new CountDownTimer((sec * 1000), 1000) {
+            Integer count = 0;
+
+            public void onTick(long millisUntilFinished) {
+                count++;
+            }
+
+            public void onFinish() {
+                try {
+                    if (count < 3) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
 //                                mTextCountdown.setVisibility(View.VISIBLE);
 //                                mTextCountdown.setText(String.valueOf(count));
-                                timer.start();
-                            }else {
-                                //mTextCountdown.setVisibility(View.GONE);
+                        timerToCheckNetwork.start();
+                    } else {
+                        //mTextCountdown.setVisibility(View.GONE);
 
-                                File directory = new File(pictureFolder);
-                                File[] files = directory.listFiles();
-                                if (files != null && files.length > 0) {
-                                    //PlayContent();
-                                    mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
-                                    mTextCountdown.setVisibility(View.VISIBLE);
-                                    timer3.start();
-                                }
-                            }
+                        File directory = new File(pictureFolder);
+                        File[] files = directory.listFiles();
+                        if (files != null && files.length > 0) {
+                            //PlayContent();
+                            mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
+                            mTextCountdown.setVisibility(View.VISIBLE);
+                            timerToPlay.start();
                         }
-                    }, 3000);
+                    }
+
+                }catch (Exception e){
+                    setting.toastException(mContext, e.getMessage());
                 }
-
-            }catch (Exception e){
-                setting.toastException(mContext, e.getMessage());
             }
-        }
-    };
+        };
+    }
 
-    //timer2
-    CountDownTimer timer2 = new CountDownTimer(6000, 1000) {
-        public void onTick(long millisUntilFinished) {
-            mTextCountdown.setText(""+String.format("%d",
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-        }
-
-        public void onFinish() {
-            try {
-                mTextViewloading.setVisibility(View.GONE);
-                mTextCountdown.setVisibility(View.GONE);
-                UpdateContent();
-
-            }catch (Exception e){
-                setting.toastException(mContext, e.getMessage());
+    //setTimerToUpdateContent
+    private void setTimerToUpdateContent(int sec) {
+        timerToUpdate = new CountDownTimer((sec * 1000), 1000) {
+            public void onTick(long millisUntilFinished) {
+                mTextCountdown.setText(""+String.format("%d",
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
-        }
-    };
 
-    //timer3
-    CountDownTimer timer3 = new CountDownTimer(6000, 1000) {
-        public void onTick(long millisUntilFinished) {
-            mTextCountdown.setText(""+String.format("%d",
-                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
-        }
+            public void onFinish() {
+                try {
+                    mTextViewloading.setVisibility(View.GONE);
+                    mTextCountdown.setVisibility(View.GONE);
+                    UpdateContent();
 
-        public void onFinish() {
-            try {
-                mTextViewloading.setVisibility(View.GONE);
-                mTextCountdown.setVisibility(View.GONE);
-                PlayContent();
-
-            }catch (Exception e){
-                setting.toastException(mContext, e.getMessage());
+                }catch (Exception e){
+                    setting.toastException(mContext, e.getMessage());
+                }
             }
-        }
-    };
+        };
+    }
+
+    //setTimerToPlayContent
+    private void setTimerToPlayContent(int sec) {
+        timerToPlay = new CountDownTimer((sec * 1000), 1000) {
+            public void onTick(long millisUntilFinished) {
+                mTextCountdown.setText(""+String.format("%d",
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                try {
+                    mTextViewloading.setVisibility(View.GONE);
+                    mTextCountdown.setVisibility(View.GONE);
+                    PlayContent();
+
+                }catch (Exception e){
+                    setting.toastException(mContext, e.getMessage());
+                }
+            }
+        };
+    }
 
     private void UpdateContent()
     {
@@ -366,86 +421,92 @@ public class MainFragment extends Fragment {
 
         // Do the task in background/non UI thread
         protected Boolean doInBackground(Void... value){
-            HttpURLConnection connection = null;
-            InputStream inputStream;
-            Bitmap bitmap;
-            Boolean result = false;
+            try{
+                HttpURLConnection connection = null;
+                InputStream inputStream;
+                Bitmap bitmap;
+                Boolean result = false;
 
-            String url = "http://www.cvm.coretera.co.th";
+                String url = "http://www.cvm.coretera.co.th";
 
-            ArrayList<HashMap<String,String>> server_result = MysqlConnector.selectAllContent(url);
-            String[] resultList = new String[server_result.size()];
-            //Log.d("selectAllContent", server_result.size()+"");
-            for(int i = 0;i<server_result.size();i++){
-                resultList[i] = server_result.get(i).get("local_path");
-            }
-
-            int count = resultList.length;
-
-            count = count + 1; //have video
-
-            // Loop through the urls
-            for(int i=0;i<count;i++){
-                String urlFullPath;
-
-                //have video
-                if (i == (count-1)) {
-                    urlFullPath = url + "/video/video.mp4";
-                }else {
-                    urlFullPath = url + resultList[i];
+                ArrayList<HashMap<String,String>> server_result = MysqlConnector.selectAllContent(url);
+                String[] resultList = new String[server_result.size()];
+                //Log.d("selectAllContent", server_result.size()+"");
+                for(int i = 0;i<server_result.size();i++){
+                    resultList[i] = server_result.get(i).get("local_path");
                 }
 
-                //String urlFullPath = url + resultList[i];
-                URL currentURL = stringToURL(urlFullPath);
+                int count = resultList.length;
 
-                // So download the image from this url
-                try{
-                    // Initialize a new http url connection
-                    connection = (HttpURLConnection) currentURL.openConnection();
+                count = count + 1; //have video
 
-                    // Connect the http url connection
-                    connection.connect();
-
-                    // Get the input stream from http url connection
-                    inputStream = connection.getInputStream();
-
-                    // Initialize a new BufferedInputStream from InputStream
-                    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+                // Loop through the urls
+                for(int i=0;i<count;i++){
+                    String urlFullPath;
 
                     //have video
                     if (i == (count-1)) {
-                        result = saveVideoToInternalStorage(bufferedInputStream, "video.mp4", videoFolder);
-                        if (!result) {
-                            //break;
-                        }
-
+                        urlFullPath = url + "/video/video.mp4";
                     }else {
-                        // Convert BufferedInputStream to Bitmap object
-                        bitmap = BitmapFactory.decodeStream(bufferedInputStream);
-                        bufferedInputStream.close();
+                        urlFullPath = url + resultList[i];
+                    }
 
-                        result = saveImageToInternalStorage(bitmap, i + 1, pictureFolder);
-                        if (!result) {
+                    //String urlFullPath = url + resultList[i];
+                    URL currentURL = stringToURL(urlFullPath);
+
+                    // So download the image from this url
+                    try{
+                        // Initialize a new http url connection
+                        connection = (HttpURLConnection) currentURL.openConnection();
+
+                        // Connect the http url connection
+                        connection.connect();
+
+                        // Get the input stream from http url connection
+                        inputStream = connection.getInputStream();
+
+                        // Initialize a new BufferedInputStream from InputStream
+                        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+                        //have video
+                        if (i == (count-1)) {
+                            result = saveVideoToInternalStorage(bufferedInputStream, "video.mp4", videoFolder);
+                            if (!result) {
+                                //break;
+                            }
+
+                        }else {
+                            // Convert BufferedInputStream to Bitmap object
+                            bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+                            bufferedInputStream.close();
+
+                            result = saveImageToInternalStorage(bitmap, i + 1, pictureFolder);
+                            if (!result) {
+                                //break;
+                            }
+                        }
+
+                        // Publish the async task progress
+                        // Added 1, because index start from 0
+                        publishProgress((int) (((i+1) / (float) count) * 100));
+                        if(isCancelled()){
                             //break;
                         }
-                    }
 
-                    // Publish the async task progress
-                    // Added 1, because index start from 0
-                    publishProgress((int) (((i+1) / (float) count) * 100));
-                    if(isCancelled()){
-                        //break;
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }finally{
+                        // Disconnect the http url connection
+                        connection.disconnect();
                     }
-
-                }catch(IOException e){
-                    e.printStackTrace();
-                }finally{
-                    // Disconnect the http url connection
-                    connection.disconnect();
                 }
-            }
 
-            return result;
+                return result;
+
+            }catch (Exception e){
+                Log.d("DownloadTask", "doInBackground: " + e.getMessage());
+                return false;
+            }
         }
 
         // On progress update
@@ -479,7 +540,7 @@ public class MainFragment extends Fragment {
             mTextViewloading.setVisibility(View.VISIBLE);
             mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
             mTextCountdown.setVisibility(View.VISIBLE);
-            timer3.start();
+            timerToPlay.start();
         }
     }
 

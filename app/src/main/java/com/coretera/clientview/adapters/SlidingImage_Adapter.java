@@ -53,10 +53,10 @@ public class SlidingImage_Adapter extends PagerAdapter {
         Integer imageScaleType = setting.GetImageScaleType(this.context);
         switch (imageScaleType){
             case 1:
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 break;
             case 2:
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
                 break;
             case 3:
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
