@@ -5,14 +5,14 @@
 
     <string name="overview_text">CORETERA</string>
     <string name="loading_text">loading</string>
-    <string name="button_config">config</string>
+    <!--<string name="button_config">config</string>-->
 
-    <string name="config_title">CONFIG</string>
-    <string name="button_done">Done</string>
+    <string name="config_title">ตั้งค่าระบบ</string>
+    <string name="button_done">เสร็จ</string>
 
-    <string name="connected">connected</string>
-    <string name="disconnect">disconnect</string>
-    <string name="connectFailed">connect failed</string>
+    <!--<string name="connected">connected</string>-->
+    <!--<string name="disconnect">disconnect</string>-->
+    <!--<string name="connectFailed">connect failed</string>-->
 
     <string name="version_title">Version 1.1</string>
 

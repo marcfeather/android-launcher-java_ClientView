@@ -468,7 +468,7 @@ public class MainFragment extends Fragment {
 
             if (!result) {
                 //Toast.makeText(getActivity(), "พบความผิดพลาดในการบันทึกรูปภาพ", Toast.LENGTH_LONG).show();
-                Toast.makeText(getActivity(), "Update failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "การอัพเดตผิดพลาด!", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -477,7 +477,7 @@ public class MainFragment extends Fragment {
             //mButtonPlay.setEnabled(true);
             //PlayContent();
             mTextViewloading.setVisibility(View.VISIBLE);
-            mTextViewloading.setText("Updated complete.");
+            mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
             mTextCountdown.setVisibility(View.VISIBLE);
             timer3.start();
         }
