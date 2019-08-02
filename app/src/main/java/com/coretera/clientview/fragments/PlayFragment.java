@@ -95,12 +95,12 @@ public class PlayFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            new InitImageViewTask().execute();
-
-        }catch (Exception e){
-            setting.toastException(mContext, e.getMessage());
-        }
+//        try {
+//            new InitImageViewTask().execute();
+//
+//        }catch (Exception e){
+//            setting.toastException(mContext, e.getMessage());
+//        }
     }
 
     @Override
@@ -115,8 +115,12 @@ public class PlayFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        timerSlider.start();
-        checkVideoExists();
+        try {
+            new InitImageViewTask().execute();
+
+        }catch (Exception e){
+            setting.toastException(mContext, e.getMessage());
+        }
     }
 
     private void InitProgressDialog() {

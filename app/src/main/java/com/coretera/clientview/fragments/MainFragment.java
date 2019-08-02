@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import static android.content.ContentValues.TAG;
+
 //public class MainFragment extends Fragment implements View.OnClickListener {
 public class MainFragment extends Fragment {
 
@@ -53,7 +55,8 @@ public class MainFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private String pictureFolder, videoFolder;
 
-    Integer countConnect = 0;
+    Integer countConnect;
+    Boolean isFirst = true;
 
     @Override
     public void onAttach(Context context) {
@@ -123,11 +126,9 @@ public class MainFragment extends Fragment {
         if (!directory.exists()) {
             directory.mkdirs();
         }
-
-        startToCheck(true);
     }
 
-    private void startToCheck(Boolean isFirst){
+    private void startToCheck(){
 
         setTimerDelayFirst(3);
         setTimerToCheckNetwork(3);
@@ -135,19 +136,22 @@ public class MainFragment extends Fragment {
         setTimerToUpdateContent(6);
         setTimerToPlayContent(6);
 
-        countConnect = 0;
-        countConnect++;
+        countConnect = 1;
 
         mTextViewloading.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
         mTextCountdown.setVisibility(View.GONE);
 
+        Log.d(TAG, "checkStep: startToCheck: isFirst = ".concat(String.valueOf(isFirst)));
         if (isFirst) {
+            isFirst = false;
             //Delay 3 sec
             timerDelayFirst.start();
+            Log.d(TAG, "checkStep: startToCheck: timerDelayFirst.start()");
         }else {
             timerToCheckNetwork.start();
+            Log.d(TAG, "checkStep: startToCheck: timerToCheckNetwork.start()");
         }
     }
 
@@ -161,7 +165,8 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        startToCheck(false);
+        startToCheck();
+        Log.d(TAG, "onResume: startToCheck()");
     }
 
     private void cancelAllTimer()
@@ -203,40 +208,45 @@ public class MainFragment extends Fragment {
     //setTimerDelay
     private void setTimerDelayFirst(int sec) {
         timerDelayFirst = new CountDownTimer((sec * 1000), 1000) {
-            public void onTick(long millisUntilFinished) {}
+            int run = 0;
+            public void onTick(long millisUntilFinished) {
+                Log.d(TAG, "checkStep: setTimerDelayFirst: onTick: ".concat(String.valueOf(run++)));
+            }
 
             public void onFinish() {
                 try {
                     timerToCheckNetwork.start();
-                    //Log.d("TAG", "onFinish: setTimerDelayFirst");
+                    Log.d(TAG, "checkStep: setTimerDelayFirst: onFinish: timerToCheckNetwork.start()");
 
                 }catch (Exception e){
                     setting.toastException(mContext, e.getMessage());
                 }
             }
         };
-
-        timerDelayFirst.start();
     }
 
     //setTimerToCheckNetwork
     private void setTimerToCheckNetwork(int sec) {
         timerToCheckNetwork = new CountDownTimer((sec * 1000), 1000) {
-            public void onTick(long millisUntilFinished) {}
+            int run = 0;
+            public void onTick(long millisUntilFinished) {
+                Log.d(TAG, "checkStep: setTimerToCheckNetwork: onTick: ".concat(String.valueOf(run++)));
+            }
 
             public void onFinish() {
                 try {
                     mProgressBar.setVisibility(View.GONE);
 
-                    if (setting.checkNetworkConnection(mContext) && setting.checkAccessInternet() && setting.checkServerActive()){
+                    if (setting.checkNetworkConnection(mContext) && setting.checkAccessInternet()){// && setting.checkServerActive()){
                         mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
                         mTextCountdown.setVisibility(View.VISIBLE);
                         timerToUpdate.start();
+                        Log.d(TAG, "checkStep: setTimerToCheckNetwork: onFinish: timerToUpdate.start()");
 
                     } else {
                         mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ครั้งที่ ".concat(String.valueOf(countConnect)).concat(" ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล"));
                         timerDelay.start();
-                        //Log.d("TAG", "onFinish: timerToCheckNetwork");
+                        Log.d(TAG, "checkStep: setTimerToCheckNetwork: onFinish: timerDelay.start()");
                     }
 
                 } catch (Exception e) {
@@ -244,14 +254,15 @@ public class MainFragment extends Fragment {
                 }
             }
         };
-
-        timerToCheckNetwork.start();
     }
 
     //setTimerDelay
     private void setTimerDelay(int sec) {
         timerDelay = new CountDownTimer((sec * 1000), 1000) {
-            public void onTick(long millisUntilFinished) {}
+            int run = 0;
+            public void onTick(long millisUntilFinished) {
+                Log.d(TAG, "checkStep: setTimerDelay: onTick: ".concat(String.valueOf(run++)));
+            }
 
             public void onFinish() {
                 try {
@@ -261,6 +272,7 @@ public class MainFragment extends Fragment {
                         mProgressBar.setVisibility(View.VISIBLE);
                         mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
                         timerToCheckNetwork.start();
+                        Log.d(TAG, "checkStep: setTimerDelay: onFinish: timerToCheckNetwork.start()");
 
                     } else {
                         File directory = new File(pictureFolder);
@@ -270,6 +282,7 @@ public class MainFragment extends Fragment {
                                 mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
                                 mTextCountdown.setVisibility(View.VISIBLE);
                                 timerToPlay.start();
+                                Log.d(TAG, "checkStep: setTimerDelay: onFinish: timerToPlay.start()");
                             }
                         }
                     }
@@ -279,17 +292,17 @@ public class MainFragment extends Fragment {
                 }
             }
         };
-
-        timerDelay.start();
     }
 
     //setTimerToUpdateContent
     private void setTimerToUpdateContent(int sec) {
         timerToUpdate = new CountDownTimer((sec * 1000), 1000) {
+            int run = 0;
             public void onTick(long millisUntilFinished) {
                 mTextCountdown.setText(""+String.format("%d",
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                Log.d(TAG, "checkStep: setTimerToUpdateContent: onTick: ".concat(String.valueOf(run++)));
             }
 
             public void onFinish() {
@@ -297,6 +310,7 @@ public class MainFragment extends Fragment {
                     mTextViewloading.setVisibility(View.GONE);
                     mTextCountdown.setVisibility(View.GONE);
                     UpdateContent();
+                    Log.d(TAG, "checkStep: setTimerToUpdateContent: onFinish: UpdateContent");
 
                 }catch (Exception e){
                     setting.toastException(mContext, e.getMessage());
@@ -308,10 +322,12 @@ public class MainFragment extends Fragment {
     //setTimerToPlayContent
     private void setTimerToPlayContent(int sec) {
         timerToPlay = new CountDownTimer((sec * 1000), 1000) {
+            int run = 0;
             public void onTick(long millisUntilFinished) {
                 mTextCountdown.setText(""+String.format("%d",
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                Log.d(TAG, "checkStep: setTimerToPlayContent: onTick: ".concat(String.valueOf(run++)));
             }
 
             public void onFinish() {
@@ -319,6 +335,7 @@ public class MainFragment extends Fragment {
                     mTextViewloading.setVisibility(View.GONE);
                     mTextCountdown.setVisibility(View.GONE);
                     PlayContent();
+                    Log.d(TAG, "checkStep: setTimerToPlayContent: onFinish: PlayContent");
 
                 }catch (Exception e){
                     setting.toastException(mContext, e.getMessage());
@@ -503,6 +520,16 @@ public class MainFragment extends Fragment {
 
             if (!result) {
                 Toast.makeText(getActivity(), "การอัพเดตผิดพลาด!", Toast.LENGTH_LONG).show();
+
+//                //External Picture directory path to delete last file
+//                File directory = new File(pictureFolder);
+//                if (directory.exists()) {
+//                    File[] files = directory.listFiles();
+//                    File file = files[files.length-1];
+//                    if(file.exists()){
+//                        file.delete();
+//                    }
+//                }
             }
 
             //External Picture directory path to delete file
