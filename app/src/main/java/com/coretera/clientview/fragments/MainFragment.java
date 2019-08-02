@@ -53,6 +53,8 @@ public class MainFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private String pictureFolder, videoFolder;
 
+    Integer countConnect = 0;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -125,19 +127,11 @@ public class MainFragment extends Fragment {
             directory.mkdirs();
         }
 
+        countConnect++;
+
         mTextViewloading.setVisibility(View.VISIBLE);
-
-        //if (setting.GetIsSetConfig(getContext())){
-            mProgressBar.setVisibility(View.VISIBLE);
-            mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
-
-//            File directory = new File(folder);
-//            File[] files = directory.listFiles();
-//            if (files != null && files.length > 0) {
-//                mButtonPlay.setEnabled(true);
-//            }else {
-//                mButtonPlay.setEnabled(false);
-//            }
+        mProgressBar.setVisibility(View.VISIBLE);
+        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
 
         setTimerToCheckNetwork(3);
         setTimerDelay(3);
@@ -145,13 +139,6 @@ public class MainFragment extends Fragment {
         setTimerToPlayContent(6);
 
         timerToCheckNetwork.start();
-
-//        }else {
-//            mProgressBar.setVisibility(View.GONE);
-//            mTextViewloading.setText("System not config, Please config system");
-//        }
-
-
     }
 
 //    @Override
@@ -184,81 +171,19 @@ public class MainFragment extends Fragment {
     //setTimerToCheckNetwork
     private void setTimerToCheckNetwork(int sec) {
         timerToCheckNetwork = new CountDownTimer((sec * 1000), 1000) {
-            Boolean result;
-            //Integer count = 0;
-
-            public void onTick(long millisUntilFinished) {
-                try {
-                    if (setting.isConnectedToNetwork(mContext) && setting.isOnline()) {
-                        result = true;
-                    } else {
-                        result = false;
-                    }
-
-                } catch (Exception e) {
-                    setting.toastException(mContext, e.getMessage());
-                }
-            }
+            public void onTick(long millisUntilFinished) {}
 
             public void onFinish() {
                 try {
                     mProgressBar.setVisibility(View.GONE);
 
-                    if (result) {
+                    if (setting.isConnectedToNetwork(mContext) && setting.isOnline()){
                         mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
-                        //mButtonUpdate.setEnabled(true);
-//                    final Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //UpdateContent();
-//                        }
-//                    }, 3000);
-
                         mTextCountdown.setVisibility(View.VISIBLE);
                         timerToUpdate.start();
-                        //timer.cancel();
-
-//                    File directory = new File(folder);
-//                    File[] files = directory.listFiles();
-//                    if (files != null && files.length > 0) {
-//                        //mButtonPlay.setEnabled(true);
-//                        timer2.start();
-//                    }else {
-//                        //mButtonPlay.setEnabled(false);
-//                    }
 
                     } else {
-                        mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล");
-                        //mButtonUpdate.setEnabled(false);
-                        //count++;
-
-//                        final Handler handler = new Handler();
-//                        handler.postDelayed(new Runnable() {
-//                            @Override
-//                            @Override
-//                            public void run() {
-//                                if (count < 3) {
-//                                    mProgressBar.setVisibility(View.VISIBLE);
-//                                    mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
-////                                mTextCountdown.setVisibility(View.VISIBLE);
-////                                mTextCountdown.setText(String.valueOf(count));
-//                                    start();
-//                                } else {
-//                                    //mTextCountdown.setVisibility(View.GONE);
-//
-//                                    File directory = new File(pictureFolder);
-//                                    File[] files = directory.listFiles();
-//                                    if (files != null && files.length > 0) {
-//                                        //PlayContent();
-//                                        mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
-//                                        mTextCountdown.setVisibility(View.VISIBLE);
-//                                        timerToPlay.start();
-//                                    }
-//                                }
-//                            }
-//                        }, 3000);
-
+                        mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ครั้งที่ ".concat(String.valueOf(countConnect)).concat(" ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล"));
                         timerDelay.start();
                     }
 
@@ -272,27 +197,20 @@ public class MainFragment extends Fragment {
     //setTimerDelay
     private void setTimerDelay(int sec) {
         timerDelay = new CountDownTimer((sec * 1000), 1000) {
-            Integer count = 0;
-
-            public void onTick(long millisUntilFinished) {
-                count++;
-            }
+            public void onTick(long millisUntilFinished) {}
 
             public void onFinish() {
                 try {
-                    if (count < 3) {
+                    if (countConnect < 3) {
+                        countConnect++;
                         mProgressBar.setVisibility(View.VISIBLE);
-                        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..");
-//                                mTextCountdown.setVisibility(View.VISIBLE);
-//                                mTextCountdown.setText(String.valueOf(count));
+                        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
                         timerToCheckNetwork.start();
-                    } else {
-                        //mTextCountdown.setVisibility(View.GONE);
 
+                    } else {
                         File directory = new File(pictureFolder);
                         File[] files = directory.listFiles();
                         if (files != null && files.length > 0) {
-                            //PlayContent();
                             mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
                             mTextCountdown.setVisibility(View.VISIBLE);
                             timerToPlay.start();
@@ -350,8 +268,7 @@ public class MainFragment extends Fragment {
         };
     }
 
-    private void UpdateContent()
-    {
+    private void UpdateContent() {
         InitProgressDialog();
 
         //External Picture directory path to delete file
@@ -375,8 +292,6 @@ public class MainFragment extends Fragment {
                 }
             }
         }
-
-        //setting.SaveExternalStorageDirectory(mContext, folder);
 
         // Execute the async task
         new DownloadTask().execute();

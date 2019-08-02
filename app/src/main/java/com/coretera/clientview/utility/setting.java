@@ -33,8 +33,7 @@ public class setting {
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
-            //Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            Process ipProcess = runtime.exec("ping  119.59.120.11");
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
             return (exitValue == 0);
         }
