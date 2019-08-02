@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
     TextView mTextCountdown;
     FloatingActionButton fab;
 
-    CountDownTimer timerToCheckNetwork, timerToUpdate, timerToPlay, timerDelay;
+    CountDownTimer timerDelayFirst, timerToCheckNetwork, timerToUpdate, timerToPlay, timerDelay;
 
     private ProgressDialog mProgressDialog;
     private String pictureFolder, videoFolder;
@@ -91,10 +91,7 @@ public class MainFragment extends Fragment {
 //                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                            .setAction("Action", null).show();
 
-                    timerToCheckNetwork.cancel();
-                    timerDelay.cancel();
-                    timerToUpdate.cancel();
-                    timerToPlay.cancel();
+                    cancelAllTimer();
 
                     mCallback.someEvent(new ConfigFragment());
                 }
@@ -127,25 +124,53 @@ public class MainFragment extends Fragment {
             directory.mkdirs();
         }
 
-        countConnect++;
+        startToCheck(true);
+    }
 
-        mTextViewloading.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
-        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
+    private void startToCheck(Boolean isFirst){
 
+        setTimerDelayFirst(3);
         setTimerToCheckNetwork(3);
         setTimerDelay(3);
         setTimerToUpdateContent(6);
         setTimerToPlayContent(6);
 
-        //Delay 3 sec
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                timerToCheckNetwork.start();
-            }
-        }, 3000);
+        countConnect = 0;
+        countConnect++;
+
+        mTextViewloading.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
+        mTextCountdown.setVisibility(View.GONE);
+
+        if (isFirst) {
+            //Delay 3 sec
+            timerDelayFirst.start();
+        }else {
+            timerToCheckNetwork.start();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        cancelAllTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        startToCheck(false);
+    }
+
+    private void cancelAllTimer()
+    {
+        timerDelayFirst.cancel();
+        timerToCheckNetwork.cancel();
+        timerDelay.cancel();
+        timerToUpdate.cancel();
+        timerToPlay.cancel();
     }
 
 //    @Override
@@ -175,6 +200,25 @@ public class MainFragment extends Fragment {
 //        }
 //    }
 
+    //setTimerDelay
+    private void setTimerDelayFirst(int sec) {
+        timerDelayFirst = new CountDownTimer((sec * 1000), 1000) {
+            public void onTick(long millisUntilFinished) {}
+
+            public void onFinish() {
+                try {
+                    timerToCheckNetwork.start();
+                    //Log.d("TAG", "onFinish: setTimerDelayFirst");
+
+                }catch (Exception e){
+                    setting.toastException(mContext, e.getMessage());
+                }
+            }
+        };
+
+        timerDelayFirst.start();
+    }
+
     //setTimerToCheckNetwork
     private void setTimerToCheckNetwork(int sec) {
         timerToCheckNetwork = new CountDownTimer((sec * 1000), 1000) {
@@ -184,7 +228,7 @@ public class MainFragment extends Fragment {
                 try {
                     mProgressBar.setVisibility(View.GONE);
 
-                    if (setting.isConnectedToNetwork(mContext) && setting.isOnline()){
+                    if (setting.checkNetworkConnection(mContext) && setting.checkAccessInternet() && setting.checkServerActive()){
                         mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
                         mTextCountdown.setVisibility(View.VISIBLE);
                         timerToUpdate.start();
@@ -192,6 +236,7 @@ public class MainFragment extends Fragment {
                     } else {
                         mTextViewloading.setText("การเชื่อมต่อเซิร์ฟเวอร์ครั้งที่ ".concat(String.valueOf(countConnect)).concat(" ไม่สำเร็จ กรุณาตั้งค่าระบบเพื่ออัพเดตข้อมูล"));
                         timerDelay.start();
+                        //Log.d("TAG", "onFinish: timerToCheckNetwork");
                     }
 
                 } catch (Exception e) {
@@ -199,6 +244,8 @@ public class MainFragment extends Fragment {
                 }
             }
         };
+
+        timerToCheckNetwork.start();
     }
 
     //setTimerDelay
@@ -210,6 +257,7 @@ public class MainFragment extends Fragment {
                 try {
                     if (countConnect < 3) {
                         countConnect++;
+                        //Log.d("TAG", "onFinish: setTimerDelay".concat(String.valueOf(countConnect)));
                         mProgressBar.setVisibility(View.VISIBLE);
                         mTextViewloading.setText("กำลังตรวจสอบการเชื่อมต่อเซิร์ฟเวอร์..".concat(" (ครั้งที่ ").concat(String.valueOf(countConnect)).concat(")"));
                         timerToCheckNetwork.start();
@@ -231,6 +279,8 @@ public class MainFragment extends Fragment {
                 }
             }
         };
+
+        timerDelay.start();
     }
 
     //setTimerToUpdateContent

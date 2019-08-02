@@ -103,6 +103,22 @@ public class PlayFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        timerSlider.cancel();
+        timerVideoStart.cancel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        timerSlider.start();
+        checkVideoExists();
+    }
+
     private void InitProgressDialog() {
         // Initialize the progress dialog
         mProgressDialog = new ProgressDialog(getActivity());
@@ -194,7 +210,6 @@ public class PlayFragment extends Fragment {
                     case MotionEvent.ACTION_UP:
                         Log.d("Awesome Tag", "ACTION_UP");
                         timerSlider.start();
-                        //timer2.start();
                         checkVideoExists();
                         break;
                 }
@@ -243,7 +258,6 @@ public class PlayFragment extends Fragment {
             @Override
             public void onFinish() {
                 timerSlider.cancel();
-
                 mLayoutVideo.setVisibility(View.VISIBLE);
                 mPager.setVisibility(View.GONE);
 
@@ -253,28 +267,28 @@ public class PlayFragment extends Fragment {
             }
         };
 
-        //timer2.start();
+        checkVideoExists();
+    }
 
+    private void checkVideoExists() {
         videoFolder = setting.GetExternalStorageDirectoryVideo(mContext);
         File directory = new File(videoFolder);
-        File[] files = directory.listFiles();
-        if (files != null && files.length > 0) {
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null && files.length > 0) {
 //            for (File file : files) {
 //                if(file.exists()){
 //                    mVideoView.setVideoURI(file);
 //                }
 //            }
 
-            checkVideoExists();
-        }
-    }
-
-    private void checkVideoExists() {
-        String filePath = videoFolder + "video.mp4";
-        File file = new File(filePath);
-        if(file.exists()){
-            mVideoView.setVideoPath(filePath);
-            timerVideoStart.start();
+                String filePath = videoFolder + "video.mp4";
+                File file = new File(filePath);
+                if(file.exists()){
+                    mVideoView.setVideoPath(filePath);
+                    timerVideoStart.start();
+                }
+            }
         }
     }
 

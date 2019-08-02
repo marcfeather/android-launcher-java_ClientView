@@ -371,22 +371,22 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getWifi() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Toast.makeText(getContext(), "version> = marshmallow", Toast.LENGTH_SHORT).show();
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getContext(), "location turned off", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
-            } else {
-                Toast.makeText(getContext(), "location turned on", Toast.LENGTH_SHORT).show();
-                wifiManager.startScan();
-            }
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            Toast.makeText(getContext(), "version> = marshmallow", Toast.LENGTH_SHORT).show();
+//            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(getContext(), "location turned off", Toast.LENGTH_SHORT).show();
+//                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+//            } else {
+//                Toast.makeText(getContext(), "location turned on", Toast.LENGTH_SHORT).show();
+//                wifiManager.startScan();
+//            }
+//        } else {
             Toast.makeText(getContext(), "Wifi Scanning", Toast.LENGTH_SHORT).show();
             //ButtonWifiScan.setText("scanning..");
             //ButtonWifiScan.setEnabled(false);
 
             wifiManager.startScan();
-        }
+        //}
     }
 //    @Override
 //    public void onPause() {

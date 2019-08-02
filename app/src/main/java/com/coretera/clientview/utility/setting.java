@@ -15,35 +15,58 @@ import java.net.URL;
 
 public class setting {
 
+    private static final String domainname = "cvm.coretera.co.th";
+
     public static void toastException(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static boolean isConnectedToNetwork(Context context) {
+    public static boolean checkNetworkConnection(Context context) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        boolean isConnected = false;
+        boolean result = false;
         if (connectivityManager != null) {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            isConnected = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
+            result = (activeNetwork != null) && (activeNetwork.isConnectedOrConnecting());
         }
 
-        return isConnected;
+        Log.d("CheckConnect", "checkNetworkConnection: ".concat(String.valueOf(result)));
+
+        return result;
     }
 
     // ICMP
-    public static boolean isOnline() {
+    public static boolean checkAccessInternet() {
+        Boolean result = false;
         Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
+            result = (exitValue == 0);
         }
         catch (IOException e)          { e.printStackTrace(); }
         catch (InterruptedException e) { e.printStackTrace(); }
 
-        return false;
+        Log.d("CheckConnect", "checkAccessInternet: ".concat(String.valueOf(result)));
+
+        return result;
+    }
+
+    public static boolean checkServerActive() {
+        final String command = "ping -c 1 ".concat(domainname);
+        boolean result = false;
+        try {
+            result = Runtime.getRuntime().exec(command).waitFor() == 0;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("CheckConnect", "checkServerActive: ".concat(String.valueOf(result)));
+
+        return result;
     }
 
 //    public static void SaveContentPath(Context context, String contentPath){

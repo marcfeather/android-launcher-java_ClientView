@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,12 +28,25 @@ public class WifiReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action)) {
             //sb = new StringBuilder();
+
+            WifiInfo info = wifiManager.getConnectionInfo ();
+            String ssidConnected  = info.getSSID().replace("\"", "");
+            Log.d("WifiReceiver", "onReceive: ssid = ".concat(ssidConnected));
+
             List<ScanResult> wifiList = wifiManager.getScanResults();
             ArrayList<String> deviceList = new ArrayList<>();
             for (ScanResult scanResult : wifiList) {
                 //sb.append("\n").append(scanResult.SSID).append(" - ").append(scanResult.capabilities);
                 //deviceList.add(scanResult.SSID + " - " + scanResult.capabilities);
-                deviceList.add(scanResult.SSID);
+
+                if (scanResult.SSID.equals(ssidConnected)) {
+                    scanResult.SSID = scanResult.SSID.concat(" - Connected");
+                }
+
+                if (!deviceList.contains(scanResult.SSID)) {
+                    deviceList.add(scanResult.SSID);
+                    Log.d("WifiReceiver", "onReceive: scanResult = ".concat(scanResult.SSID));
+                }
             }
             //Toast.makeText(context, sb, Toast.LENGTH_SHORT).show();
             ArrayAdapter arrayAdapter = new ArrayAdapter(context, R.layout.wifi_item, deviceList.toArray());
