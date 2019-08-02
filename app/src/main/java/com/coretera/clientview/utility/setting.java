@@ -65,24 +65,24 @@ public class setting {
 //        return shared.getString("contentPath", "");
 //    }
 
-    public static void SaveIsSetConfig(Context context){
-        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
-
-        // Get SharedPreferences
-        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
-
-        //Save SharedPreferences
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putBoolean("isSetConfig", true);
-        editor.apply();
-    }
-    public static Boolean GetIsSetConfig(Context context){
-        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
-
-        // Get SharedPreferences
-        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
-        return shared.getBoolean("isSetConfig", false);
-    }
+//    public static void SaveIsSetConfig(Context context){
+//        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+//
+//        // Get SharedPreferences
+//        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+//
+//        //Save SharedPreferences
+//        SharedPreferences.Editor editor = shared.edit();
+//        editor.putBoolean("isSetConfig", true);
+//        editor.apply();
+//    }
+//    public static Boolean GetIsSetConfig(Context context){
+//        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+//
+//        // Get SharedPreferences
+//        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+//        return shared.getBoolean("isSetConfig", false);
+//    }
 
     public static void SaveSlideTime(Context context, Integer slideTime){
         String sharedPrefName = context.getString(R.string.SharedPreferencesName);
