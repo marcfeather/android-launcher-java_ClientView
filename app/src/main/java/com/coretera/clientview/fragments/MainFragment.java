@@ -138,7 +138,14 @@ public class MainFragment extends Fragment {
         setTimerToUpdateContent(6);
         setTimerToPlayContent(6);
 
-        timerToCheckNetwork.start();
+        //Delay 3 sec
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                timerToCheckNetwork.start();
+            }
+        }, 3000);
     }
 
 //    @Override
@@ -209,11 +216,13 @@ public class MainFragment extends Fragment {
 
                     } else {
                         File directory = new File(pictureFolder);
-                        File[] files = directory.listFiles();
-                        if (files != null && files.length > 0) {
-                            mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
-                            mTextCountdown.setVisibility(View.VISIBLE);
-                            timerToPlay.start();
+                        if (directory.exists()) {
+                            File[] files = directory.listFiles();
+                            if (files != null && files.length > 0) {
+                                mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
+                                mTextCountdown.setVisibility(View.VISIBLE);
+                                timerToPlay.start();
+                            }
                         }
                     }
 
@@ -443,19 +452,24 @@ public class MainFragment extends Fragment {
             setting.SaveCurrentPage(mContext, 0);
 
             if (!result) {
-                //Toast.makeText(getActivity(), "พบความผิดพลาดในการบันทึกรูปภาพ", Toast.LENGTH_LONG).show();
                 Toast.makeText(getActivity(), "การอัพเดตผิดพลาด!", Toast.LENGTH_LONG).show();
-                return;
             }
 
-            //new InitImageViewTask().execute();
+            //External Picture directory path to delete file
+            File directory = new File(pictureFolder);
+            if (directory.exists()) {
+                File[] files = directory.listFiles();
+                if (files.length > 0) {
+                    mTextViewloading.setVisibility(View.VISIBLE);
+                    mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
+                    mTextCountdown.setVisibility(View.VISIBLE);
+                    timerToPlay.start();
 
-            //mButtonPlay.setEnabled(true);
-            //PlayContent();
-            mTextViewloading.setVisibility(View.VISIBLE);
-            mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
-            mTextCountdown.setVisibility(View.VISIBLE);
-            timerToPlay.start();
+                }else {
+                    mTextViewloading.setVisibility(View.VISIBLE);
+                    mTextViewloading.setText("ไม่พบข้อมูลในเครื่อง กรุณาตรวจสอบการตั้งค่า");
+                }
+            }
         }
     }
 
