@@ -136,6 +136,14 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                     // Get the selected item text from ListView
                     String selectedItem = (String) parent.getItemAtPosition(position);
 
+                    if (selectedItem.contains("Connected")) {
+//                        selectedItem = selectedItem.replace(" - Connected","");
+////                        ButtonWifiConnect.setVisibility(View.VISIBLE);
+////                        ButtonWifiConnect.setText("Forgot");
+                        ClearBeforeScan(true);
+                        return;
+                    }
+
                     TextWifiSelected.setVisibility(View.VISIBLE);
                     TextWifiSelected.setText(selectedItem);
 
