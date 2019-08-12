@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -52,6 +53,12 @@ public class PlayFragment extends Fragment {
     private String videoFolder;
 
     private MediaController mMediaController;
+
+    Boolean isFirst = true;
+
+    InitImageViewTask myInitImageViewTask = null;
+
+    SlidingImage_Adapter SlidingImageAdapter = null;
 
     @Override
     public void onAttach(Context context) {
@@ -107,8 +114,12 @@ public class PlayFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        timerSlider.cancel();
-        timerVideoStart.cancel();
+        if (timerSlider != null) {
+            timerSlider.cancel();
+        }
+        if (timerVideoStart != null) {
+            timerVideoStart.cancel();
+        }
     }
 
     @Override
@@ -116,7 +127,24 @@ public class PlayFragment extends Fragment {
         super.onResume();
 
         try {
-            new InitImageViewTask().execute();
+            if (!isFirst) {
+                //timerSlider.cancel();
+                //timerVideoStart.cancel();
+
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+
+                if (myInitImageViewTask != null) {
+                    myInitImageViewTask.cancel(true);
+                }
+
+                mPager.setCurrentItem(0);
+            }
+
+            isFirst = false;
+            myInitImageViewTask = new InitImageViewTask();
+            myInitImageViewTask.execute();
 
         }catch (Exception e){
             setting.toastException(mContext, e.getMessage());
@@ -148,6 +176,9 @@ public class PlayFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Bitmap> result) {
+
+            if (myInitImageViewTask.isCancelled()) { return; }
+
             if (result.size() == 0) {
                 mCallback.someEvent(new MainFragment());
 
@@ -179,13 +210,15 @@ public class PlayFragment extends Fragment {
 
     private void BindImageToView(List<Bitmap> listBitmap) {
         List<Bitmap> ImagesArray = new ArrayList<>();
-        for(int i=0;i<listBitmap.size();i++)
+        for(int i=0;i<listBitmap.size();i++) {
             ImagesArray.add(listBitmap.get(i));
+        }
 
         currentPage = setting.GetCurrentPage(mContext);
 
         mPager = view.findViewById(R.id.pager);
-        mPager.setAdapter(new SlidingImage_Adapter(getActivity(),ImagesArray));
+        SlidingImageAdapter = new SlidingImage_Adapter(getActivity(),ImagesArray);
+        mPager.setAdapter(SlidingImageAdapter);
         // displaying selected image first
         mPager.setCurrentItem(currentPage);
 

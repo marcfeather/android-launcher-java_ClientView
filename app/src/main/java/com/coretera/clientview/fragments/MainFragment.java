@@ -58,6 +58,8 @@ public class MainFragment extends Fragment {
     Integer countConnect;
     Boolean isFirst = true;
 
+    DownloadTask myDownloadTask = null;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -95,7 +97,6 @@ public class MainFragment extends Fragment {
 //                            .setAction("Action", null).show();
 
                     cancelAllTimer();
-
                     mCallback.someEvent(new ConfigFragment());
                 }
             });
@@ -165,17 +166,39 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        if (!isFirst) {
+            //cancelAllTimer();
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+            }
+            if (myDownloadTask != null) {
+                myDownloadTask.cancel(true);
+            }
+            //mCallback.someEvent(new ConfigFragment());
+            //return;
+        }
+
         startToCheck();
         Log.d(TAG, "onResume: startToCheck()");
     }
 
     private void cancelAllTimer()
     {
-        timerDelayFirst.cancel();
-        timerToCheckNetwork.cancel();
-        timerDelay.cancel();
-        timerToUpdate.cancel();
-        timerToPlay.cancel();
+        if (timerDelayFirst != null) {
+            timerDelayFirst.cancel();
+        }
+        if (timerToCheckNetwork != null) {
+            timerToCheckNetwork.cancel();
+        }
+        if (timerDelay != null) {
+            timerDelay.cancel();
+        }
+        if (timerToUpdate != null) {
+            timerToUpdate.cancel();
+        }
+        if (timerToPlay != null) {
+            timerToPlay.cancel();
+        }
     }
 
 //    @Override
@@ -370,7 +393,8 @@ public class MainFragment extends Fragment {
         }
 
         // Execute the async task
-        new DownloadTask().execute();
+        myDownloadTask = new DownloadTask();
+        myDownloadTask.execute();
     }
 
     private void InitProgressDialog() {
@@ -513,6 +537,9 @@ public class MainFragment extends Fragment {
 
         // When all async task done
         protected void onPostExecute(Boolean result){
+
+            if (myDownloadTask.isCancelled()){ return; }
+
             // Hide the progress dialog
             mProgressDialog.dismiss();
 
