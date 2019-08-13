@@ -2,6 +2,7 @@ package com.coretera.clientview.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.coretera.clientview.Callback;
 import com.coretera.clientview.R;
+import com.coretera.clientview.StageActivity;
 import com.coretera.clientview.utility.*;
 
 import java.io.BufferedInputStream;
@@ -166,20 +168,22 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (!isFirst) {
-            //cancelAllTimer();
-            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                mProgressDialog.dismiss();
-            }
-            if (myDownloadTask != null) {
-                myDownloadTask.cancel(true);
-            }
-            //mCallback.someEvent(new ConfigFragment());
-            //return;
-        }
+//        if (!isFirst) {
+//            //cancelAllTimer();
+//            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+//                mProgressDialog.dismiss();
+//            }
+//            if (myDownloadTask != null) {
+//                myDownloadTask.cancel(true);
+//            }
+//            //mCallback.someEvent(new ConfigFragment());
+//            //return;
+//        }
+//
+//        startToCheck();
+//        Log.d(TAG, "onResume: startToCheck()");
 
-        startToCheck();
-        Log.d(TAG, "onResume: startToCheck()");
+        PlayContent();
     }
 
     private void cancelAllTimer()
@@ -648,6 +652,10 @@ public class MainFragment extends Fragment {
     }
 
     private void PlayContent() {
-        mCallback.someEvent(new PlayFragment());
+        //mCallback.someEvent(new PlayFragment());
+
+        Intent intent = new Intent(getActivity(), StageActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }
