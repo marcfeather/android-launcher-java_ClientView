@@ -90,25 +90,25 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         try {
             view.findViewById(R.id.button_done).setOnClickListener(this);
             view.findViewById(R.id.wifi_connect).setOnClickListener(this);
-            view.findViewById(R.id.slide_time_decrease).setOnClickListener(this);
-            view.findViewById(R.id.slide_time_increase).setOnClickListener(this);
-            view.findViewById(R.id.scaleType_decrease).setOnClickListener(this);
-            view.findViewById(R.id.scaleType_increase).setOnClickListener(this);
-            view.findViewById(R.id.slide_videoTime_decrease).setOnClickListener(this);
-            view.findViewById(R.id.slide_videoTime_increase).setOnClickListener(this);
+//            view.findViewById(R.id.slide_time_decrease).setOnClickListener(this);
+//            view.findViewById(R.id.slide_time_increase).setOnClickListener(this);
+//            view.findViewById(R.id.scaleType_decrease).setOnClickListener(this);
+//            view.findViewById(R.id.scaleType_increase).setOnClickListener(this);
+//            view.findViewById(R.id.slide_videoTime_decrease).setOnClickListener(this);
+//            view.findViewById(R.id.slide_videoTime_increase).setOnClickListener(this);
 
             SwitchWifi = view.findViewById(R.id.SwitchWifi);
-            //TextWifiStatusValue = view.findViewById(R.id.Text_Wifi_Status);
-            mTextViewSlideTime = view.findViewById(R.id.slide_time_value);
-            mTextViewScaleType = view.findViewById(R.id.scaleType_value);
-            mTextViewVideoTime = view.findViewById(R.id.slide_videoTime_value);
+            ////TextWifiStatusValue = view.findViewById(R.id.Text_Wifi_Status);
+            //mTextViewSlideTime = view.findViewById(R.id.slide_time_value);
+            //mTextViewScaleType = view.findViewById(R.id.scaleType_value);
+            //mTextViewVideoTime = view.findViewById(R.id.slide_videoTime_value);
             wifiList = view.findViewById(R.id.wifiList);
             TextWifiSelected = view.findViewById(R.id.wifi_selected);
             EditTextPassword = view.findViewById(R.id.wifi_Password);
             ButtonWifiConnect = view.findViewById(R.id.wifi_connect);
 
-            BtnScaleType_decrease = view.findViewById(R.id.scaleType_decrease);
-            BtnScaleType_increase = view.findViewById(R.id.scaleType_increase);
+//            BtnScaleType_decrease = view.findViewById(R.id.scaleType_decrease);
+//            BtnScaleType_increase = view.findViewById(R.id.scaleType_increase);
 
             SwitchWifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -188,7 +188,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                 SwitchWifi.setText("Off");
             }
 
-            SetValue();
+            //SetValue();
 
 //            ClearBeforeScan();
 //            OpenWifi();
@@ -204,50 +204,50 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void SetValue() {
-        slideTime = setting.GetSlideTime(getContext());
-        if (slideTime == 0) { slideTime = length; }
-        mTextViewSlideTime.setText(String.valueOf(slideTime));
+//    private void SetValue() {
+//        slideTime = setting.GetSlideTime(getContext());
+//        if (slideTime == 0) { slideTime = length; }
+//        mTextViewSlideTime.setText(String.valueOf(slideTime));
+//
+//        scaleTypeId = setting.GetImageScaleType(getContext());
+//        if (scaleTypeId == 0) { scaleTypeId = 1; }
+//        mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
+//
+//        videoTime = setting.GetVideoTime(getContext());
+//        if (videoTime == 0) { videoTime = videoDefault; }
+//        mTextViewVideoTime.setText(String.valueOf(videoTime));
+//    }
 
-        scaleTypeId = setting.GetImageScaleType(getContext());
-        if (scaleTypeId == 0) { scaleTypeId = 1; }
-        mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
-
-        videoTime = setting.GetVideoTime(getContext());
-        if (videoTime == 0) { videoTime = videoDefault; }
-        mTextViewVideoTime.setText(String.valueOf(videoTime));
-    }
-
-    private String getScaleTypeText(Integer scaleTypeId) {
-        String ret = "";
-        switch (scaleTypeId){
-            case 1:
-                ret = "CENTER INSIDE";
-                break;
-            case 2:
-                ret = "CENTER";
-                break;
-            case 3:
-                ret = "CENTER CROP";
-                break;
-            case 4:
-                ret = "FIT START";
-                break;
-            case 5:
-                ret = "FIT END";
-                break;
-            case 6:
-                ret = "FIT CENTER";
-                break;
-            case 7:
-                ret = "FIT XY";
-                break;
-            case 8:
-                ret = "MATRIX";
-                break;
-        }
-        return ret;
-    }
+//    private String getScaleTypeText(Integer scaleTypeId) {
+//        String ret = "";
+//        switch (scaleTypeId){
+//            case 1:
+//                ret = "CENTER INSIDE";
+//                break;
+//            case 2:
+//                ret = "CENTER";
+//                break;
+//            case 3:
+//                ret = "CENTER CROP";
+//                break;
+//            case 4:
+//                ret = "FIT START";
+//                break;
+//            case 5:
+//                ret = "FIT END";
+//                break;
+//            case 6:
+//                ret = "FIT CENTER";
+//                break;
+//            case 7:
+//                ret = "FIT XY";
+//                break;
+//            case 8:
+//                ret = "MATRIX";
+//                break;
+//        }
+//        return ret;
+//    }
 
     private void UseSoftKeyboard(Boolean value)
     {
@@ -299,29 +299,29 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
                     ConnectWifi();
                     break;
 
-                case R.id.slide_time_decrease:
-                    ChangeSlideTime(false);
-                    break;
-
-                case R.id.slide_time_increase:
-                    ChangeSlideTime(true);
-                    break;
-
-                case R.id.scaleType_decrease:
-                    ChangeScaleType(false);
-                    break;
-
-                case R.id.scaleType_increase:
-                    ChangeScaleType(true);
-                    break;
-
-                case R.id.slide_videoTime_decrease:
-                    ChangeVideoTime(false);
-                    break;
-
-                case R.id.slide_videoTime_increase:
-                    ChangeVideoTime(true);
-                    break;
+//                case R.id.slide_time_decrease:
+//                    ChangeSlideTime(false);
+//                    break;
+//
+//                case R.id.slide_time_increase:
+//                    ChangeSlideTime(true);
+//                    break;
+//
+//                case R.id.scaleType_decrease:
+//                    ChangeScaleType(false);
+//                    break;
+//
+//                case R.id.scaleType_increase:
+//                    ChangeScaleType(true);
+//                    break;
+//
+//                case R.id.slide_videoTime_decrease:
+//                    ChangeVideoTime(false);
+//                    break;
+//
+//                case R.id.slide_videoTime_increase:
+//                    ChangeVideoTime(true);
+//                    break;
             }
 
         }catch (Exception e){
@@ -417,52 +417,52 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void ChangeSlideTime(Boolean add){
-        if (!add && slideTime == length) {
-            Toast.makeText(getContext(),"Min value is " + String.valueOf(slideTime), Toast.LENGTH_SHORT).show();
-            return;
-        }
+//    private void ChangeSlideTime(Boolean add){
+//        if (!add && slideTime == length) {
+//            Toast.makeText(getContext(),"Min value is " + String.valueOf(slideTime), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        slideTime = (add) ? slideTime + length : slideTime - length;
+//
+//        mTextViewSlideTime.setText(String.valueOf(slideTime));
+//
+//        setting.SaveSlideTime(getContext(), slideTime);
+//    }
+//
+//    private void ChangeScaleType(Boolean add){
+//        if (!add && scaleTypeId == 1) {
+//            BtnScaleType_decrease.setEnabled(false);
+//            return;
+//        }
+//
+//        if (add && scaleTypeId == 8) {
+//            BtnScaleType_increase.setEnabled(false);
+//            return;
+//        }
+//
+//        BtnScaleType_decrease.setEnabled(true);
+//        BtnScaleType_increase.setEnabled(true);
+//
+//        scaleTypeId = (add) ? scaleTypeId + 1 : scaleTypeId - 1;
+//
+//        mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
+//
+//        setting.SaveImageScaleType(getContext(), scaleTypeId);
+//    }
 
-        slideTime = (add) ? slideTime + length : slideTime - length;
-
-        mTextViewSlideTime.setText(String.valueOf(slideTime));
-
-        setting.SaveSlideTime(getContext(), slideTime);
-    }
-
-    private void ChangeScaleType(Boolean add){
-        if (!add && scaleTypeId == 1) {
-            BtnScaleType_decrease.setEnabled(false);
-            return;
-        }
-
-        if (add && scaleTypeId == 8) {
-            BtnScaleType_increase.setEnabled(false);
-            return;
-        }
-
-        BtnScaleType_decrease.setEnabled(true);
-        BtnScaleType_increase.setEnabled(true);
-
-        scaleTypeId = (add) ? scaleTypeId + 1 : scaleTypeId - 1;
-
-        mTextViewScaleType.setText(getScaleTypeText(scaleTypeId));
-
-        setting.SaveImageScaleType(getContext(), scaleTypeId);
-    }
-
-    private void ChangeVideoTime(Boolean add){
-        if (!add && videoTime == videoLength) {
-            Toast.makeText(getContext(),"Min value is " + String.valueOf(videoTime), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        videoTime = (add) ? videoTime + videoLength : videoTime - videoLength;
-
-        mTextViewVideoTime.setText(String.valueOf(videoTime));
-
-        setting.SaveVideoTime(getContext(), videoTime);
-    }
+//    private void ChangeVideoTime(Boolean add){
+//        if (!add && videoTime == videoLength) {
+//            Toast.makeText(getContext(),"Min value is " + String.valueOf(videoTime), Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        videoTime = (add) ? videoTime + videoLength : videoTime - videoLength;
+//
+//        mTextViewVideoTime.setText(String.valueOf(videoTime));
+//
+//        setting.SaveVideoTime(getContext(), videoTime);
+//    }
 
     private void ConnectWifi()
     {

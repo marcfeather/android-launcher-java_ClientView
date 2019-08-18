@@ -180,209 +180,209 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/section_setting_play"
-                android:layout_below="@+id/section_wifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/section_setting_play"-->
+                <!--android:layout_below="@+id/section_wifi"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:layout_marginStart="15dp"-->
+                <!--android:layout_marginEnd="15dp">-->
 
-                <TextView
-                    android:id="@+id/config_play_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="PICTURE"
-                    android:textColor="@color/colorText1"
-                    android:textSize="18sp"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/config_play_label"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="start"-->
+                    <!--android:text="PICTURE"-->
+                    <!--android:textColor="@color/colorText1"-->
+                    <!--android:textSize="18sp"/>-->
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal" >
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:orientation="horizontal" >-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:orientation="horizontal">-->
 
-                        <TextView
-                            android:id="@+id/slide_time_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorText2"
-                            android:text="Slide Time (second)"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/slide_time_label"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="Slide Time (second)"-->
+                            <!--android:textSize="16sp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentRight="true">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:layout_alignParentRight="true">-->
 
-                        <Button
-                            android:id = "@+id/slide_time_decrease"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableStart="@drawable/ic_chevron_left_black_24dp" />
+                        <!--<Button-->
+                            <!--android:id = "@+id/slide_time_decrease"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableStart="@drawable/ic_chevron_left_black_24dp" />-->
 
-                        <TextView
-                            android:id="@+id/slide_time_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp"
-                            android:textColor="@color/colorText2"
-                            android:text="0"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/slide_time_value"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginStart="15dp"-->
+                            <!--android:layout_marginEnd="15dp"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="0"-->
+                            <!--android:textSize="16sp"/>-->
 
-                        <Button
-                            android:id = "@+id/slide_time_increase"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>
+                        <!--<Button-->
+                            <!--android:id = "@+id/slide_time_increase"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                </RelativeLayout>
+                <!--</RelativeLayout>-->
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal" >
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:orientation="horizontal" >-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:orientation="horizontal">-->
 
-                        <TextView
-                            android:id="@+id/scale_type_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorText2"
-                            android:text="Scale Type"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/scale_type_label"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="Scale Type"-->
+                            <!--android:textSize="16sp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentRight="true">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:layout_alignParentRight="true">-->
 
-                        <Button
-                            android:id = "@+id/scaleType_decrease"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableStart="@drawable/ic_chevron_left_black_24dp"/>
+                        <!--<Button-->
+                            <!--android:id = "@+id/scaleType_decrease"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableStart="@drawable/ic_chevron_left_black_24dp"/>-->
 
-                        <TextView
-                            android:id="@+id/scaleType_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp"
-                            android:textColor="@color/colorText2"
-                            android:text="None"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/scaleType_value"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginStart="15dp"-->
+                            <!--android:layout_marginEnd="15dp"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="None"-->
+                            <!--android:textSize="16sp"/>-->
 
-                        <Button
-                            android:id = "@+id/scaleType_increase"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>
+                        <!--<Button-->
+                            <!--android:id = "@+id/scaleType_increase"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                </RelativeLayout>
+                <!--</RelativeLayout>-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/section_setting_videoPlay"
-                android:layout_below="@+id/section_setting_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/section_setting_videoPlay"-->
+                <!--android:layout_below="@+id/section_setting_play"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:layout_marginStart="15dp"-->
+                <!--android:layout_marginEnd="15dp">-->
 
-                <TextView
-                    android:id="@+id/config_videoPlay_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="VIDEO"
-                    android:textColor="@color/colorText1"
-                    android:textSize="18sp"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/config_videoPlay_label"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="start"-->
+                    <!--android:text="VIDEO"-->
+                    <!--android:textColor="@color/colorText1"-->
+                    <!--android:textSize="18sp"/>-->
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal" >
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:orientation="horizontal" >-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:orientation="horizontal">-->
 
-                        <TextView
-                            android:id="@+id/slide_videoTime_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorText2"
-                            android:text="Video Start (second)"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/slide_videoTime_label"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="Video Start (second)"-->
+                            <!--android:textSize="16sp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_alignParentRight="true">
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:layout_alignParentRight="true">-->
 
-                        <Button
-                            android:id = "@+id/slide_videoTime_decrease"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableStart="@drawable/ic_chevron_left_black_24dp" />
+                        <!--<Button-->
+                            <!--android:id = "@+id/slide_videoTime_decrease"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableStart="@drawable/ic_chevron_left_black_24dp" />-->
 
-                        <TextView
-                            android:id="@+id/slide_videoTime_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp"
-                            android:textColor="@color/colorText2"
-                            android:text="0"
-                            android:textSize="16sp"/>
+                        <!--<TextView-->
+                            <!--android:id="@+id/slide_videoTime_value"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginStart="15dp"-->
+                            <!--android:layout_marginEnd="15dp"-->
+                            <!--android:textColor="@color/colorText2"-->
+                            <!--android:text="0"-->
+                            <!--android:textSize="16sp"/>-->
 
-                        <Button
-                            android:id = "@+id/slide_videoTime_increase"
-                            android:layout_width = "40dp"
-                            android:layout_height = "40dp"
-                            android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>
+                        <!--<Button-->
+                            <!--android:id = "@+id/slide_videoTime_increase"-->
+                            <!--android:layout_width = "40dp"-->
+                            <!--android:layout_height = "40dp"-->
+                            <!--android:drawableEnd="@drawable/ic_chevron_right_black_24dp"/>-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
-                </RelativeLayout>
+                <!--</RelativeLayout>-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
         </LinearLayout>
 
