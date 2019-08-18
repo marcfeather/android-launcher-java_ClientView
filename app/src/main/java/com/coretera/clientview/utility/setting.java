@@ -220,4 +220,23 @@ public class setting {
         SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
         return shared.getString("externalStorageDirectoryVideo", "");
     }
+
+    public static void SaveExternalStorageDirectoryHtml(Context context, String externalStorageDirectoryHtml){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("externalStorageDirectoryHtml", externalStorageDirectoryHtml);
+        editor.apply();
+    }
+    public static String GetExternalStorageDirectoryHtml(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("externalStorageDirectoryHtml", "");
+    }
 }

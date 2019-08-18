@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.coretera.clientview">
 
-    <uses-permission android:name = "android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name = "android.permission.CHANGE_WIFI_STATE" />
-    <!--<uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt;-->
-    <!--<uses-permission android:name = "android.permission.ACCESS_FINE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt;-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- <uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt; -->
+    <!-- <uses-permission android:name = "android.permission.ACCESS_FINE_LOCATION"/> &lt;!&ndash; for Android 6 and above &ndash;&gt; -->
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,8 +23,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
             android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:stateNotNeeded="true">
             <intent-filter>
@@ -34,6 +34,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".StageActivity"></activity>
     </application>
 
 </manifest>

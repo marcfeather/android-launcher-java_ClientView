@@ -2,6 +2,7 @@ package com.coretera.clientview.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.coretera.clientview.Callback;
 import com.coretera.clientview.R;
+import com.coretera.clientview.StageActivity;
 import com.coretera.clientview.utility.*;
 
 import java.io.BufferedInputStream;
@@ -53,7 +55,7 @@ public class MainFragment extends Fragment {
     CountDownTimer timerDelayFirst, timerToCheckNetwork, timerToUpdate, timerToPlay, timerDelay;
 
     private ProgressDialog mProgressDialog;
-    private String pictureFolder, videoFolder;
+    private String pictureFolder, videoFolder, htmlFolder;
 
     Integer countConnect;
     Boolean isFirst = true;
@@ -112,18 +114,28 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //External Picture directory path to save file
-        pictureFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Picture/";
-        setting.SaveExternalStorageDirectoryPicture(mContext, pictureFolder);
-        File directory = new File(pictureFolder);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+        File directory;
+
+//        //External Picture directory path to save file
+//        pictureFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Picture/";
+//        setting.SaveExternalStorageDirectoryPicture(mContext, pictureFolder);
+//        directory = new File(pictureFolder);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
 
         //External Video directory path to save file
         videoFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Video/";
         setting.SaveExternalStorageDirectoryVideo(mContext, videoFolder);
         directory = new File(videoFolder);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        //External HTML directory path to save file
+        htmlFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/HTML/";
+        setting.SaveExternalStorageDirectoryHtml(mContext, htmlFolder);
+        directory = new File(htmlFolder);
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -180,6 +192,8 @@ public class MainFragment extends Fragment {
 
         startToCheck();
         Log.d(TAG, "onResume: startToCheck()");
+
+        //PlayContent();
     }
 
     private void cancelAllTimer()
@@ -370,8 +384,21 @@ public class MainFragment extends Fragment {
     private void UpdateContent() {
         InitProgressDialog();
 
-        //External Picture directory path to delete file
-        File directory = new File(pictureFolder);
+        File directory;
+
+//        //External Picture directory path to delete file
+//        directory = new File(pictureFolder);
+//        if (directory.exists()) {
+//            File[] files = directory.listFiles();
+//            for (File file : files) {
+//                if(file.exists()){
+//                    file.delete();
+//                }
+//            }
+//        }
+        
+        //External Video directory path to delete file
+        directory = new File(videoFolder);
         if (directory.exists()) {
             File[] files = directory.listFiles();
             for (File file : files) {
@@ -380,9 +407,9 @@ public class MainFragment extends Fragment {
                 }
             }
         }
-        
-        //External Video directory path to delete file
-        directory = new File(videoFolder);
+
+        //External Html directory path to delete file
+        directory = new File(htmlFolder);
         if (directory.exists()) {
             File[] files = directory.listFiles();
             for (File file : files) {
@@ -439,81 +466,110 @@ public class MainFragment extends Fragment {
             try{
                 HttpURLConnection connection = null;
                 InputStream inputStream;
-                Bitmap bitmap;
+                //Bitmap bitmap;
                 Boolean result = false;
 
-                String url = "http://www.cvm.coretera.co.th";
+                String url = "http://www.dsm.coretera.co.th";
 
-                ArrayList<HashMap<String,String>> server_result = MysqlConnector.selectAllContent(url);
-                String[] resultList = new String[server_result.size()];
-                //Log.d("selectAllContent", server_result.size()+"");
-                for(int i = 0;i<server_result.size();i++){
-                    resultList[i] = server_result.get(i).get("local_path");
-                }
+//                ArrayList<HashMap<String,String>> server_result = MysqlConnector.selectAllContent(url);
+//                String[] resultList = new String[server_result.size()];
+//                //Log.d("selectAllContent", server_result.size()+"");
+//                for(int i = 0;i<server_result.size();i++){
+//                    resultList[i] = server_result.get(i).get("local_path");
+//                }
+//
+//                int count = resultList.length;
+//
+//                count = count + 1; //have video
+//
+//                // Loop through the urls
+//                for(int i=0;i<count;i++){
+//                    String urlFullPath;
+//
+//                    //have video
+//                    if (i == (count-1)) {
+//                        urlFullPath = url + "/video/video.mp4";
+//                    }else {
+//                        urlFullPath = url + resultList[i];
+//                    }
+//
+//                    //String urlFullPath = url + resultList[i];
+//                    URL currentURL = stringToURL(urlFullPath);
+//
+//                    // So download the image from this url
+//                    try{
+//                        // Initialize a new http url connection
+//                        connection = (HttpURLConnection) currentURL.openConnection();
+//
+//                        // Connect the http url connection
+//                        connection.connect();
+//
+//                        // Get the input stream from http url connection
+//                        inputStream = connection.getInputStream();
+//
+//                        // Initialize a new BufferedInputStream from InputStream
+//                        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+//
+//                        //have video
+//                        if (i == (count-1)) {
+//                            result = saveVideoToInternalStorage(bufferedInputStream, "video.mp4", videoFolder);
+//                            if (!result) {
+//                                //break;
+//                            }
+//
+//                        }else {
+//                            // Convert BufferedInputStream to Bitmap object
+//                            bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+//                            bufferedInputStream.close();
+//
+//                            result = saveImageToInternalStorage(bitmap, i + 1, pictureFolder);
+//                            if (!result) {
+//                                //break;
+//                            }
+//                        }
+//
+//                        // Publish the async task progress
+//                        // Added 1, because index start from 0
+//                        publishProgress((int) (((i+1) / (float) count) * 100));
+//                        if(isCancelled()){
+//                            //break;
+//                        }
+//
+//                    }catch(IOException e){
+//                        e.printStackTrace();
+//                    }finally{
+//                        // Disconnect the http url connection
+//                        connection.disconnect();
+//                    }
+//                }
 
-                int count = resultList.length;
+                String urlFullPath;
+                urlFullPath = url + "/contents/html/localweb.zip";
+                URL currentURL = stringToURL(urlFullPath);
+                // So download the image from this url
+                try{
+                    // Initialize a new http url connection
+                    connection = (HttpURLConnection) currentURL.openConnection();
 
-                count = count + 1; //have video
+                    // Connect the http url connection
+                    connection.connect();
 
-                // Loop through the urls
-                for(int i=0;i<count;i++){
-                    String urlFullPath;
+                    // Get the input stream from http url connection
+                    inputStream = connection.getInputStream();
 
-                    //have video
-                    if (i == (count-1)) {
-                        urlFullPath = url + "/video/video.mp4";
-                    }else {
-                        urlFullPath = url + resultList[i];
+                    // Initialize a new BufferedInputStream from InputStream
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+                    result = saveVideoToInternalStorage(bufferedInputStream, "localweb.zip", htmlFolder);
+                    if (!result) {
+                        //break;
                     }
 
-                    //String urlFullPath = url + resultList[i];
-                    URL currentURL = stringToURL(urlFullPath);
-
-                    // So download the image from this url
-                    try{
-                        // Initialize a new http url connection
-                        connection = (HttpURLConnection) currentURL.openConnection();
-
-                        // Connect the http url connection
-                        connection.connect();
-
-                        // Get the input stream from http url connection
-                        inputStream = connection.getInputStream();
-
-                        // Initialize a new BufferedInputStream from InputStream
-                        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
-                        //have video
-                        if (i == (count-1)) {
-                            result = saveVideoToInternalStorage(bufferedInputStream, "video.mp4", videoFolder);
-                            if (!result) {
-                                //break;
-                            }
-
-                        }else {
-                            // Convert BufferedInputStream to Bitmap object
-                            bitmap = BitmapFactory.decodeStream(bufferedInputStream);
-                            bufferedInputStream.close();
-
-                            result = saveImageToInternalStorage(bitmap, i + 1, pictureFolder);
-                            if (!result) {
-                                //break;
-                            }
-                        }
-
-                        // Publish the async task progress
-                        // Added 1, because index start from 0
-                        publishProgress((int) (((i+1) / (float) count) * 100));
-                        if(isCancelled()){
-                            //break;
-                        }
-
-                    }catch(IOException e){
-                        e.printStackTrace();
-                    }finally{
-                        // Disconnect the http url connection
-                        connection.disconnect();
-                    }
+                }catch(IOException e){
+                    e.printStackTrace();
+                }finally{
+                    // Disconnect the http url connection
+                    connection.disconnect();
                 }
 
                 return result;
@@ -559,8 +615,24 @@ public class MainFragment extends Fragment {
 //                }
             }
 
+//            //External Picture directory path to delete file
+//            File directory = new File(pictureFolder);
+//            if (directory.exists()) {
+//                File[] files = directory.listFiles();
+//                if (files.length > 0) {
+//                    mTextViewloading.setVisibility(View.VISIBLE);
+//                    mTextViewloading.setText("แสดงข้อมูลอัตโนมัติใน");
+//                    mTextCountdown.setVisibility(View.VISIBLE);
+//                    timerToPlay.start();
+//
+//                }else {
+//                    mTextViewloading.setVisibility(View.VISIBLE);
+//                    mTextViewloading.setText("ไม่พบข้อมูลในเครื่อง กรุณาตรวจสอบการตั้งค่า");
+//                }
+//            }
+
             //External Picture directory path to delete file
-            File directory = new File(pictureFolder);
+            File directory = new File(htmlFolder);
             if (directory.exists()) {
                 File[] files = directory.listFiles();
                 if (files.length > 0) {
@@ -648,6 +720,10 @@ public class MainFragment extends Fragment {
     }
 
     private void PlayContent() {
-        mCallback.someEvent(new PlayFragment());
+        //mCallback.someEvent(new PlayFragment());
+
+        Intent intent = new Intent(getActivity(), StageActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }
