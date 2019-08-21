@@ -397,16 +397,16 @@ public class MainFragment extends Fragment {
 //            }
 //        }
         
-        //External Video directory path to delete file
-        directory = new File(videoFolder);
-        if (directory.exists()) {
-            File[] files = directory.listFiles();
-            for (File file : files) {
-                if(file.exists()){
-                    file.delete();
-                }
-            }
-        }
+//        //External Video directory path to delete file
+//        directory = new File(videoFolder);
+//        if (directory.exists()) {
+//            File[] files = directory.listFiles();
+//            for (File file : files) {
+//                if(file.exists()){
+//                    file.delete();
+//                }
+//            }
+//        }
 
         //External Html directory path to delete file
         directory = new File(htmlFolder);
