@@ -124,13 +124,13 @@ public class MainFragment extends Fragment {
 //            directory.mkdirs();
 //        }
 
-        //External Video directory path to save file
-        videoFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Video/";
-        setting.SaveExternalStorageDirectoryVideo(mContext, videoFolder);
-        directory = new File(videoFolder);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+//        //External Video directory path to save file
+//        videoFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Video/";
+//        setting.SaveExternalStorageDirectoryVideo(mContext, videoFolder);
+//        directory = new File(videoFolder);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
 
         //External HTML directory path to save file
         htmlFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/HTML/";
@@ -312,7 +312,7 @@ public class MainFragment extends Fragment {
                         Log.d(TAG, "checkStep: setTimerDelay: onFinish: timerToCheckNetwork.start()");
 
                     } else {
-                        File directory = new File(pictureFolder);
+                        File directory = new File(htmlFolder);
                         if (directory.exists()) {
                             File[] files = directory.listFiles();
                             if (files != null && files.length > 0) {
@@ -429,7 +429,7 @@ public class MainFragment extends Fragment {
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setIndeterminate(false);
         // Progress dialog horizontal style
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        //mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         // Progress dialog title
         mProgressDialog.setTitle("อัพเดตข้อมูล");
         // Progress dialog message
