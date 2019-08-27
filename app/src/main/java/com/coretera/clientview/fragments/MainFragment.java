@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -559,6 +560,46 @@ public class MainFragment extends Fragment {
 //                        connection.disconnect();
 //                    }
 //                }
+
+
+//https://androidforums.com/threads/posting-data-from-android-app-to-php-file-and-back-to-android-app.1137890/
+//                username = un.getText().toString();//convert username and password to string and parse
+//                password = pw.getText().toString();//them to variables
+//
+//                // Create data variable to send values to server
+//                data = URLEncoder.encode("username", "UTF-8") + "="
+//                        + URLEncoder.encode(username, "UTF-8");
+//                data += "&" + URLEncoder.encode("password", "UTF-8")
+//                        + "=" + URLEncoder.encode(password, "UTF-8");
+//
+//                BufferedReader reader = null;
+//
+//                // Send data
+//                try {
+//                    // Defined URL  where to send data
+//                    URL url = new URL("http://www.naomiedify.com/school/test/login2.php"); //see this file below
+//
+//                    // Send POST data request
+//                    URLConnection conn = url.openConnection();
+//                    conn.setDoOutput(true);
+//                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+//                    wr.write( data );
+//                    wr.flush();
+//
+//                    // Get the server response
+//                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//                    StringBuilder sb = new StringBuilder();
+//                    String line = null;
+//
+//                    // Read Server Response
+//                    while((line = reader.readLine()) != null) {
+//                        // Append server response in string
+//                        sb.append(line + "\n");
+//                    }
+//                    responseData = sb.toString();
+//                }
+//                catch(Exception ex) {}
+
 
                 String urlFullPath;
                 urlFullPath = url + "/contents/html/localweb.zip";
