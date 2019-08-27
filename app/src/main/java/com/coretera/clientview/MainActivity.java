@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements Callback{
             , REQUEST_ACCESS_NETWORK_STATE = 3
             , REQUEST_INTERNET = 4
             , REQUEST_ACCESS_WIFI_STATE = 5
-            , REQUEST_CHANGE_WIFI_STATE = 6;
+            , REQUEST_CHANGE_WIFI_STATE = 6
+            , REQUEST_READ_PHONE_STATE = 7;
 //            , REQUEST_ACCESS_COARSE_LOCATION = 7
 //            , REQUEST_ACCESS_FINE_LOCATION = 8;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements Callback{
     private static String[] PERMISSIONS_INTERNET = {Manifest.permission.INTERNET};
     private static String[] PERMISSIONS_ACCESS_WIFI_STATE = {Manifest.permission.ACCESS_WIFI_STATE};
     private static String[] PERMISSIONS_CHANGE_WIFI_STATE = {Manifest.permission.CHANGE_WIFI_STATE};
+    private static String[] PERMISSIONS_READ_PHONE_STATE = {Manifest.permission.READ_PHONE_STATE};
 //    private static String[] PERMISSIONS_ACCESS_COARSE_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION};
 //    private static String[] PERMISSIONS_ACCESS_FINE_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION};
 
@@ -126,6 +128,13 @@ public class MainActivity extends AppCompatActivity implements Callback{
                     Toast.makeText(this, "Cannot CHANGE_WIFI_STATE", Toast.LENGTH_SHORT).show();
                 }
             }
+            case REQUEST_READ_PHONE_STATE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length <= 0
+                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Cannot READ_PHONE_STATE", Toast.LENGTH_SHORT).show();
+                }
+            }
 //            case REQUEST_ACCESS_COARSE_LOCATION: {
 //                // If request is cancelled, the result arrays are empty.
 //                if (grantResults.length <= 0
@@ -187,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements Callback{
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(activity, PERMISSIONS_CHANGE_WIFI_STATE, REQUEST_CHANGE_WIFI_STATE);
+        }
+
+        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_READ_PHONE_STATE, REQUEST_READ_PHONE_STATE);
         }
 
 //        permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);

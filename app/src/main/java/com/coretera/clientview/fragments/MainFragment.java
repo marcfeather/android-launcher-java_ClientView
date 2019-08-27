@@ -3,6 +3,7 @@ package com.coretera.clientview.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,9 +11,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +66,9 @@ public class MainFragment extends Fragment {
     Boolean isFirst = true;
 
     DownloadTask myDownloadTask = null;
+
+    String IMEI_Number_Holder;
+    TelephonyManager telephonyManager;
 
     @Override
     public void onAttach(Context context) {
@@ -188,6 +196,15 @@ public class MainFragment extends Fragment {
             }
             //mCallback.someEvent(new ConfigFragment());
             //return;
+        }
+
+        if (ContextCompat.checkSelfPermission( mContext,android.Manifest.permission.READ_PHONE_STATE ) == PackageManager.PERMISSION_GRANTED )
+        {
+            telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager != null) {
+                IMEI_Number_Holder = telephonyManager.getDeviceId();
+                Log.d("GetUniqueId", "IMEI_Number_Holder: " + IMEI_Number_Holder);
+            }
         }
 
         startToCheck();
