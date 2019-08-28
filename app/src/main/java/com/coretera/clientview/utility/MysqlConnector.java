@@ -101,7 +101,7 @@ public class MysqlConnector {
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 			/* Set to Http post*/
-            //nameValuePairs.add(new BasicNameValuePair("id", imei_number));
+            nameValuePairs.add(new BasicNameValuePair("id", imei_number));
 			/* End set Value*/
 
             HttpClient httpclient = new DefaultHttpClient();
@@ -129,13 +129,26 @@ public class MysqlConnector {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
             Log.d("DebugStep", "BufferedReader: " + reader.readLine());
             StringBuilder sb = new StringBuilder();
-            String line = null;
+            String line;
+            //String[] array = new String[2];
+            //int i=0;
+            //line = reader.readLine();
+            //Log.d("DebugStep", "line: " + line);
+
+//            ArrayList<String> result = new ArrayList<>();
+//            while (reader.ready()) {
+//                Log.d("DebugStep", "in: ");
+//                result.add(reader.readLine());
+//            }
+
             while ((line = reader.readLine()) != null) {
+                //Log.d("DebugStep", "line: " + line);
                 sb.append(line);
-                Log.d("DebugStep", "readLine: " + line);
             }
+            Log.d("DebugStep", "sb: " + sb.toString());
             is.close();
             js_result = sb.toString();
+            //js_result = reader.readLine();
         } catch (Exception e) {
             Log.d("DebugStep", "Error converting result " + e.toString());
             return list;
