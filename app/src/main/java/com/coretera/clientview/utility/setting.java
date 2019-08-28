@@ -239,4 +239,61 @@ public class setting {
         SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
         return shared.getString("externalStorageDirectoryHtml", "");
     }
+
+    public static void SaveExternalStorageLocalPath(Context context, String externalStorageLocalPath){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("externalStorageLocalPath", externalStorageLocalPath);
+        editor.apply();
+    }
+    public static String GetExternalStorageLocalPath(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("externalStorageLocalPath", "");
+    }
+
+    public static void SaveExternalStorageContentZipName(Context context, String externalStorageContentZipName){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("externalStorageContentZipName", externalStorageContentZipName);
+        editor.apply();
+    }
+    public static String GetExternalStorageContentZipName(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("externalStorageContentZipName", "");
+    }
+
+    public static void SaveServerName(Context context, String serverName){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("serverName", serverName);
+        editor.apply();
+    }
+    public static String GetServerName(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("serverName", "");
+    }
 }
