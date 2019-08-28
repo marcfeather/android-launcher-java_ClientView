@@ -338,8 +338,7 @@ public class MainFragment extends Fragment {
                         Log.d(TAG, "DebugStep: setTimerDelay: onFinish: timerToCheckNetwork.start()");
 
                     } else {
-                        contentName = setting.GetExternalStorageContentZipName(mContext);
-                        contentSubPath = contentName.replace(".zip","");
+                        contentSubPath = setting.GetExternalStorageContentSubPath(mContext);
 
                         File directory = new File(htmlFolder);
                         if (directory.exists()) {
@@ -544,18 +543,21 @@ public class MainFragment extends Fragment {
                     return false;
                 }
 
-                String[] resultList = new String[server_result.size()];
+//                String[] resultList = new String[server_result.size()];
                 //Log.d("selectAllContent", server_result.size()+"");
-                String[] columnArray = {"local_path", "contentName"};
-                for(int i = 0;i<server_result.size();i++){
-                    resultList[i] = server_result.get(i).get(columnArray[i]);
-                }
+//                for(int i = 0;i<server_result.size();i++){
+//                    resultList[i] = server_result.get(i).get("local_path");
+//                }
 
-                Log.d("DebugStep", "LocalPath: " + resultList[0]);
-                Log.d("DebugStep", "ContentZipName: " + resultList[1]);
+                String local_path = server_result.get(0).get("local_path");
+                String contentName = server_result.get(0).get("contentName");
 
-                setting.SaveExternalStorageLocalPath(mContext, resultList[0]);
-                setting.SaveExternalStorageContentZipName(mContext, resultList[1]);
+                Log.d("DebugStep", "LocalPath: " + local_path);
+                Log.d("DebugStep", "ContentZipName: " + contentName);
+
+                setting.SaveExternalStorageLocalPath(mContext, local_path);
+                setting.SaveExternalStorageContentZipName(mContext, contentName);
+                setting.SaveExternalStorageContentSubPath(mContext, contentName.replace(".zip",""));
 
                 return true;
 
@@ -578,6 +580,7 @@ public class MainFragment extends Fragment {
                 return;
             }
 
+            mTextViewloading.setVisibility(View.VISIBLE);
             mTextViewloading.setText("อัพเดตข้อมูลอัตโนมัติภายใน");
             mTextCountdown.setVisibility(View.VISIBLE);
             timerToUpdate.start();
@@ -791,7 +794,7 @@ public class MainFragment extends Fragment {
         // On progress update
         protected void onProgressUpdate(Integer... progress){
             // Update the progress bar
-            mProgressDialog.setProgress(progress[0]);
+            //mProgressDialog.setProgress(progress[0]);
         }
 
         // On AsyncTask cancelled
@@ -905,12 +908,12 @@ public class MainFragment extends Fragment {
     }
 
     private void PlayContent() {
-        //mCallback.someEvent(new PlayFragment());
+        mCallback.someEvent(new StageFragment());
 
-        Intent intent = new Intent(getActivity(), StageActivity.class);
-        intent.putExtra("contentSubPath", contentSubPath);
-        startActivity(intent);
-        getActivity().finish();
+//        Intent intent = new Intent(getActivity(), StageActivity.class);
+//        intent.putExtra("contentSubPath", contentSubPath);
+//        startActivity(intent);
+//        getActivity().finish();
     }
 
     public void unzip() throws IOException
@@ -977,8 +980,9 @@ public class MainFragment extends Fragment {
                         file.delete();
                     }
                     //check file index to play html
-                    contentName = setting.GetExternalStorageContentZipName(mContext);
-                    contentSubPath = contentName.replace(".zip","");
+                    contentSubPath = setting.GetExternalStorageContentSubPath(mContext);
+
+                    //Log.d("DebugStep", "contentSubPath: " + contentSubPath);
 
                     File file2 = new File(htmlFolder + contentSubPath + "/index.html");
                     File file3 = new File(htmlFolder + contentSubPath + "/index.php");

@@ -278,6 +278,25 @@ public class setting {
         return shared.getString("externalStorageContentZipName", "");
     }
 
+    public static void SaveExternalStorageContentSubPath(Context context, String contentSubPath){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+
+        //Save SharedPreferences
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("contentSubPath", contentSubPath);
+        editor.apply();
+    }
+    public static String GetExternalStorageContentSubPath(Context context){
+        String sharedPrefName = context.getString(R.string.SharedPreferencesName);
+
+        // Get SharedPreferences
+        SharedPreferences shared = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE);
+        return shared.getString("contentSubPath", "");
+    }
+
     public static void SaveServerName(Context context, String serverName){
         String sharedPrefName = context.getString(R.string.SharedPreferencesName);
 

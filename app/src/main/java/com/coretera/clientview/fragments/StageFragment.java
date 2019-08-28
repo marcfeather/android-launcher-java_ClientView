@@ -1,23 +1,26 @@
-package com.coretera.clientview;
+package com.coretera.clientview.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
-import com.coretera.clientview.utility.*;
+import com.coretera.clientview.R;
+import com.coretera.clientview.utility.setting;
 
 import java.io.File;
 
-public class StageActivity extends AppCompatActivity {
+
+public class StageFragment extends Fragment {
 
     private Context mContext;
     private WebView webView;
@@ -25,19 +28,25 @@ public class StageActivity extends AppCompatActivity {
     String folderHtml;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_stage);
 
-        mContext = getApplicationContext();
+    }
 
-        Intent intent = getIntent();
-        String contentSubPath = intent.getStringExtra("contentSubPath");
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_stage, container, false);
+
+        mContext = getContext();
+
+        //Intent intent = getIntent();
+        //String contentSubPath = intent.getStringExtra("contentSubPath");
+        String contentSubPath = setting.GetExternalStorageContentSubPath(mContext);
         Log.d("DebugStep", "contentSubPath: " + contentSubPath);
 
-        webView = findViewById(R.id.webView);
+        webView = view.findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -66,36 +75,7 @@ public class StageActivity extends AppCompatActivity {
             }
         }
 
-    }
-
-//    @Override
-//    protected void onUserLeaveHint() {
-//        //text.setText("Home buton pressed");
-//        Toast.makeText(StageActivity.this,"Home buton pressed", Toast.LENGTH_LONG).show();
-//        super.onUserLeaveHint();
-//    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (webView.canGoBack()) {
-                        webView.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
-            }
-
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // super.onBackPressed();
-        // Not calling **super**, disables back button in current screen.
+        return view;
     }
 
 }

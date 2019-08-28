@@ -106,7 +106,7 @@ public class MysqlConnector {
 
             HttpClient httpclient = new DefaultHttpClient();
 
-            Log.d("DebugStep", "server file path: " + url + "/controllers/client_post_get_data.php");
+            //Log.d("DebugStep", "server file path: " + url + "/controllers/client_post_get_data.php");
 
 			/* Set URL*/
             HttpPost httppost = new HttpPost(url + "/controllers/client_post_get_data.php"); //https://10.0.2.2/client_get_data.php
@@ -116,10 +116,10 @@ public class MysqlConnector {
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
             is = entity.getContent();
-            if (is == null) {
-                Log.d("DebugStep", "InputStream: Null");
-            }
-            Log.d("DebugStep", "InputStream: Not Null");
+//            if (is == null) {
+//                Log.d("DebugStep", "InputStream: Null");
+//            }
+//            Log.d("DebugStep", "InputStream: Not Null");
         } catch (Exception e) {
             Log.d("DebugStep", "Error in http connection " + e.toString());
             return list;
@@ -127,25 +127,14 @@ public class MysqlConnector {
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
-            Log.d("DebugStep", "BufferedReader: " + reader.readLine());
+            //Log.d("DebugStep", "BufferedReader: " + reader.readLine());
             StringBuilder sb = new StringBuilder();
             String line;
-            //String[] array = new String[2];
-            //int i=0;
-            //line = reader.readLine();
-            //Log.d("DebugStep", "line: " + line);
-
-//            ArrayList<String> result = new ArrayList<>();
-//            while (reader.ready()) {
-//                Log.d("DebugStep", "in: ");
-//                result.add(reader.readLine());
-//            }
-
             while ((line = reader.readLine()) != null) {
                 //Log.d("DebugStep", "line: " + line);
                 sb.append(line);
             }
-            Log.d("DebugStep", "sb: " + sb.toString());
+            //Log.d("DebugStep", "sb: " + sb.toString());
             is.close();
             js_result = sb.toString();
             //js_result = reader.readLine();
@@ -155,15 +144,15 @@ public class MysqlConnector {
         }
 
         try {
-            Log.d("DebugStep", "js_result: " + js_result);
+            //Log.d("DebugStep", "js_result: " + js_result);
             final JSONArray jArray = new JSONArray(js_result);
-            Log.d("DebugStep", "jArray.length: " + jArray.length());
+            //Log.d("DebugStep", "jArray.length: " + jArray.length());
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject jo = jArray.getJSONObject(i);
                 HashMap<String, String> item = new HashMap<String,String>();
                 item.put("local_path", jo.get("local_path").toString());
-                //item.put("contentName", jo.get("contentName").toString());
-                Log.d("DebugStep", "local_path: " + jo.get("local_path").toString());
+                item.put("contentName", jo.get("contentName").toString());
+                //Log.d("DebugStep", "local_path: " + jo.get("local_path").toString());
                 //Log.d("DebugStep", "contentName: " + jo.get("contentName").toString());
                 list.add(item);
             }
