@@ -2,6 +2,7 @@ package com.coretera.clientview;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,10 @@ public class StageActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
+        Intent intent = getIntent();
+        String contentSubPath = intent.getStringExtra("contentSubPath");
+        Log.d("DebugStep", "contentSubPath: " + contentSubPath);
+
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadsImagesAutomatically(true);
@@ -69,13 +74,33 @@ public class StageActivity extends AppCompatActivity {
 
         folderHtml = setting.GetExternalStorageDirectoryHtml(mContext);
 
-        try {
-            unzip();
+//        try {
+//            unzip();
+//
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        File directory = new File(folderHtml);
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files != null && files.length > 0) {
+                String filePath = folderHtml + contentSubPath + "/index.html";
+                String filePath2 = folderHtml + contentSubPath + "/index.php";
+                File file = new File(filePath);
+                File file2 = new File(filePath2);
+                if(file.exists()){
+                    webView.loadUrl("file://" + filePath);
+                    //Log.d("GetHtml", "filePath: " + filePath);
+                }else if(file2.exists()){
+                    webView.loadUrl("file://" + filePath2);
+                    //Log.d("GetHtml", "filePath: " + filePath);
+                }
+            }
         }
+
+
     }
 
     @Override
@@ -101,114 +126,114 @@ public class StageActivity extends AppCompatActivity {
         // Not calling **super**, disables back button in current screen.
     }
 
-    public void unzip() throws IOException
-    {
-        mProgressDialog = new ProgressDialog(StageActivity.this);
-        mProgressDialog.setMessage("Please Wait...");
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-
-        StorezipFileLocation = folderHtml + "localweb.zip";
-        DirectoryName = folderHtml;
-
-        new UnZipTask().execute(StorezipFileLocation, DirectoryName);
-    }
-
-    private class UnZipTask extends AsyncTask<String, Void, Boolean>
-    {
-        @SuppressWarnings("rawtypes")
-        @Override
-        protected Boolean doInBackground(String... params)
-        {
-            String filePath = params[0];
-            String destinationPath = params[1];
-
-            File archive = new File(filePath);
-            try
-            {
-                ZipFile zipfile = new ZipFile(archive);
-                for (Enumeration e = zipfile.entries(); e.hasMoreElements();)
-                {
-                    ZipEntry entry = (ZipEntry) e.nextElement();
-                    unzipEntry(zipfile, entry, destinationPath);
-                }
-
-
-                UnzipUtil d = new UnzipUtil(StorezipFileLocation, DirectoryName);
-                d.unzip();
-
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result)
-        {
-            mProgressDialog.dismiss();
-
-            File directory = new File(DirectoryName);
-            if (directory.exists()) {
-                File[] files = directory.listFiles();
-                if (files != null && files.length > 0) {
-                    String filePath = DirectoryName + "/localweb/index.html";
-                    File file = new File(filePath);
-                    if(file.exists()){
-                        webView.loadUrl("file://" + filePath);
-                        //Log.d("GetHtml", "filePath: " + filePath);
-                    }
-                }
-            }
-        }
-
-
-        private void unzipEntry(ZipFile zipfile, ZipEntry entry,String outputDir) throws IOException
-        {
-
-            if (entry.isDirectory())
-            {
-                createDir(new File(outputDir, entry.getName()));
-                return;
-            }
-
-            File outputFile = new File(outputDir, entry.getName());
-            if (!outputFile.getParentFile().exists())
-            {
-                createDir(outputFile.getParentFile());
-            }
-
-            // Log.v("", "Extracting: " + entry);
-            BufferedInputStream inputStream = new BufferedInputStream(zipfile.getInputStream(entry));
-            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
-
-            try
-            {
-
-            }
-            finally
-            {
-                outputStream.flush();
-                outputStream.close();
-                inputStream.close();
-            }
-        }
-
-        private void createDir(File dir)
-        {
-            if (dir.exists())
-            {
-                return;
-            }
-            if (!dir.mkdirs())
-            {
-                throw new RuntimeException("Can not create dir " + dir);
-            }
-        }
-    }
+//    public void unzip() throws IOException
+//    {
+//        mProgressDialog = new ProgressDialog(StageActivity.this);
+//        mProgressDialog.setMessage("Please Wait...");
+//        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        mProgressDialog.setCancelable(false);
+//        mProgressDialog.show();
+//
+//        StorezipFileLocation = folderHtml + "localweb.zip";
+//        DirectoryName = folderHtml;
+//
+//        new UnZipTask().execute(StorezipFileLocation, DirectoryName);
+//    }
+//
+//    private class UnZipTask extends AsyncTask<String, Void, Boolean>
+//    {
+//        @SuppressWarnings("rawtypes")
+//        @Override
+//        protected Boolean doInBackground(String... params)
+//        {
+//            String filePath = params[0];
+//            String destinationPath = params[1];
+//
+//            File archive = new File(filePath);
+//            try
+//            {
+//                ZipFile zipfile = new ZipFile(archive);
+//                for (Enumeration e = zipfile.entries(); e.hasMoreElements();)
+//                {
+//                    ZipEntry entry = (ZipEntry) e.nextElement();
+//                    unzipEntry(zipfile, entry, destinationPath);
+//                }
+//
+//
+//                UnzipUtil d = new UnzipUtil(StorezipFileLocation, DirectoryName);
+//                d.unzip();
+//
+//            }
+//            catch (Exception e)
+//            {
+//                return false;
+//            }
+//
+//            return true;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result)
+//        {
+//            mProgressDialog.dismiss();
+//
+//            File directory = new File(DirectoryName);
+//            if (directory.exists()) {
+//                File[] files = directory.listFiles();
+//                if (files != null && files.length > 0) {
+//                    String filePath = DirectoryName + "/localweb/index.html";
+//                    File file = new File(filePath);
+//                    if(file.exists()){
+//                        webView.loadUrl("file://" + filePath);
+//                        //Log.d("GetHtml", "filePath: " + filePath);
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        private void unzipEntry(ZipFile zipfile, ZipEntry entry,String outputDir) throws IOException
+//        {
+//
+//            if (entry.isDirectory())
+//            {
+//                createDir(new File(outputDir, entry.getName()));
+//                return;
+//            }
+//
+//            File outputFile = new File(outputDir, entry.getName());
+//            if (!outputFile.getParentFile().exists())
+//            {
+//                createDir(outputFile.getParentFile());
+//            }
+//
+//            // Log.v("", "Extracting: " + entry);
+//            BufferedInputStream inputStream = new BufferedInputStream(zipfile.getInputStream(entry));
+//            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(outputFile));
+//
+//            try
+//            {
+//
+//            }
+//            finally
+//            {
+//                outputStream.flush();
+//                outputStream.close();
+//                inputStream.close();
+//            }
+//        }
+//
+//        private void createDir(File dir)
+//        {
+//            if (dir.exists())
+//            {
+//                return;
+//            }
+//            if (!dir.mkdirs())
+//            {
+//                throw new RuntimeException("Can not create dir " + dir);
+//            }
+//        }
+//    }
 
 }
