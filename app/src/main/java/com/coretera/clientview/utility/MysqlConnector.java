@@ -150,10 +150,12 @@ public class MysqlConnector {
             for (int i = 0; i < jArray.length(); i++) {
                 JSONObject jo = jArray.getJSONObject(i);
                 HashMap<String, String> item = new HashMap<String,String>();
-                item.put("local_path", jo.get("local_path").toString());
+                item.put("localPath", jo.get("localPath").toString());
                 item.put("contentName", jo.get("contentName").toString());
+                item.put("deviceGroupId", jo.get("deviceGroupId").toString());
                 //Log.d("DebugStep", "local_path: " + jo.get("local_path").toString());
                 //Log.d("DebugStep", "contentName: " + jo.get("contentName").toString());
+                //Log.d("DebugStep", "deviceGroupId: " + jo.get("deviceGroupId").toString());
                 list.add(item);
             }
         } catch (JSONException e) {

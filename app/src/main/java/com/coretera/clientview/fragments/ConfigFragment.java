@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
     private Switch SwitchWifi;
     //private TextView TextWifiStatusValue;
-    private TextView TextWifiSelected;
+    private TextView TextWifiSelected, TextImeiNumber;
     private EditText EditTextPassword;
     private Button ButtonWifiConnect;
     private Button BtnScaleType_decrease, BtnScaleType_increase;
@@ -63,6 +64,9 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
     private InputMethodManager inputMethodManager;
 
     private String networkType;
+
+    private String IMEI_Number_Holder;
+    private TelephonyManager telephonyManager;
 
     @Override
     public void onAttach(Context context) {
@@ -106,6 +110,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
             TextWifiSelected = view.findViewById(R.id.wifi_selected);
             EditTextPassword = view.findViewById(R.id.wifi_Password);
             ButtonWifiConnect = view.findViewById(R.id.wifi_connect);
+            TextImeiNumber = view.findViewById(R.id.config_imei_value);
 
 //            BtnScaleType_decrease = view.findViewById(R.id.scaleType_decrease);
 //            BtnScaleType_increase = view.findViewById(R.id.scaleType_increase);
@@ -176,6 +181,17 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         try {
+            //Get imei number
+            if (ContextCompat.checkSelfPermission( mContext,android.Manifest.permission.READ_PHONE_STATE ) == PackageManager.PERMISSION_GRANTED )
+            {
+                telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager != null) {
+                    IMEI_Number_Holder = telephonyManager.getDeviceId();
+                    Log.d("DebugStep", "IMEI_Number_Holder: " + IMEI_Number_Holder);
+                }
+            }
+            TextImeiNumber.setText(IMEI_Number_Holder);
+
             wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             if (wifiManager != null && wifiManager.isWifiEnabled()){
                 SwitchWifi.setChecked(true);

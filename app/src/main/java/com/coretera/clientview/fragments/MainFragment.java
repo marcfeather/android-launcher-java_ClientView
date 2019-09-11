@@ -439,7 +439,7 @@ public class MainFragment extends Fragment {
     private void UpdateContent() {
         InitProgressDialog();
 
-        File directory;
+        //File directory;
 
 //        //External Picture directory path to delete file
 //        directory = new File(pictureFolder);
@@ -463,20 +463,32 @@ public class MainFragment extends Fragment {
 //            }
 //        }
 
-        //External Html directory path to delete file
-        directory = new File(htmlFolder);
-        if (directory.exists()) {
-            File[] files = directory.listFiles();
-            for (File file : files) {
-                if(file.exists()){
-                    file.delete();
-                }
-            }
-        }
+//        //External Html directory path to delete file
+//        directory = new File(htmlFolder);
+//        if (directory.exists()) {
+//            File[] files = directory.listFiles();
+//            for (File file : files) {
+//                if(file.exists()){
+//                    file.delete();
+//                }
+//            }
+//        }
+
+        File dir = new File(htmlFolder);
+        deleteRecursive(dir);
 
         // Execute the async task
         myDownloadTask = new DownloadTask();
         myDownloadTask.execute();
+    }
+
+    public void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
+                Log.d("DebugStep", "delete : " + child.getName());
+            }
+        }
     }
 
     private void InitProgressDialog() {
@@ -525,7 +537,7 @@ public class MainFragment extends Fragment {
         return null;
     }
 
-    private class CheckDevicePerTask extends AsyncTask<Void,Integer,Boolean>{
+    private class CheckDevicePerTask extends AsyncTask<Void,Integer,String>{
         // Before the tasks execution
         protected void onPreExecute(){
             // Display the progress dialog on async task start
@@ -533,14 +545,14 @@ public class MainFragment extends Fragment {
         }
 
         // Do the task in background/non UI thread
-        protected Boolean doInBackground(Void... value){
+        protected String doInBackground(Void... value){
             try{
                 String url = setting.GetServerName(mContext);
 
                 ArrayList<HashMap<String,String>> server_result = MysqlConnector.getContentPathByImei(url, IMEI_Number_Holder);
                 Log.d("DebugStep", "server_result: " + server_result.size());
                 if (server_result.size() == 0) {
-                    return false;
+                    return "ไม่พบสิทธ์การใช้งานของเครื่อง กรุณาตรวจสอบที่ระบบจัดการข้อมูล";
                 }
 
 //                String[] resultList = new String[server_result.size()];
@@ -549,34 +561,40 @@ public class MainFragment extends Fragment {
 //                    resultList[i] = server_result.get(i).get("local_path");
 //                }
 
-                String local_path = server_result.get(0).get("local_path");
+                String local_path = server_result.get(0).get("localPath");
                 String contentName = server_result.get(0).get("contentName");
+                Integer deviceGroupId = Integer.valueOf(server_result.get(0).get("deviceGroupId"));
 
                 Log.d("DebugStep", "LocalPath: " + local_path);
-                Log.d("DebugStep", "ContentZipName: " + contentName);
+                Log.d("DebugStep", "ContentName: " + contentName);
+                Log.d("DebugStep", "deviceGroupId: " + deviceGroupId);
+
+                if(deviceGroupId == 0) {
+                    return "ไม่พบข้อมูลการแสดงผล กรุณาตรวจสอบที่ระบบจัดการข้อมูล";
+                }
 
                 setting.SaveExternalStorageLocalPath(mContext, local_path);
                 setting.SaveExternalStorageContentZipName(mContext, contentName);
-                setting.SaveExternalStorageContentSubPath(mContext, contentName.replace(".zip",""));
+                setting.SaveExternalStorageContentSubPath(mContext, contentName.replace(".zip", ""));
 
-                return true;
+                return "";
 
             }catch (Exception e){
                 Log.d("CheckDevicePerTask", "doInBackground: " + e.getMessage());
-                return false;
+                return e.getMessage();
             }
         }
 
         // When all async task done
-        protected void onPostExecute(Boolean result){
+        protected void onPostExecute(String ret){
 
             // Hide the progress dialog
             mProgressDialog2.dismiss();
 
-            if (!result) {
+            if (!ret.equals("")) {
                 //Toast.makeText(getActivity(), "การตรวจสอบสิทธ์ผิดพลาด!", Toast.LENGTH_LONG).show();
                 mTextViewloading.setVisibility(View.VISIBLE);
-                mTextViewloading.setText("ไม่พบสิทธ์การใช้งานของเครื่อง");
+                mTextViewloading.setText(ret);
                 return;
             }
 
