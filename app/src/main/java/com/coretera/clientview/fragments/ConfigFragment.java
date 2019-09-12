@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -50,7 +51,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
     private Switch SwitchWifi;
     //private TextView TextWifiStatusValue;
-    private TextView TextWifiSelected, TextImeiNumber;
+    private TextView TextVersionNumber, TextWifiSelected, TextImeiNumber;
     private EditText EditTextPassword;
     private Button ButtonWifiConnect;
     private Button BtnScaleType_decrease, BtnScaleType_increase;
@@ -101,6 +102,7 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 //            view.findViewById(R.id.slide_videoTime_decrease).setOnClickListener(this);
 //            view.findViewById(R.id.slide_videoTime_increase).setOnClickListener(this);
 
+            TextVersionNumber = view.findViewById(R.id.version_content);
             SwitchWifi = view.findViewById(R.id.SwitchWifi);
             ////TextWifiStatusValue = view.findViewById(R.id.Text_Wifi_Status);
             //mTextViewSlideTime = view.findViewById(R.id.slide_time_value);
@@ -114,6 +116,10 @@ public class ConfigFragment extends Fragment implements View.OnClickListener {
 
 //            BtnScaleType_decrease = view.findViewById(R.id.scaleType_decrease);
 //            BtnScaleType_increase = view.findViewById(R.id.scaleType_increase);
+
+            //Get versionName in Gradle app
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            TextVersionNumber.setText("Version ".concat(pInfo.versionName));
 
             SwitchWifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override

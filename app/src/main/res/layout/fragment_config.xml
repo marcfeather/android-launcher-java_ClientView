@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:keepScreenOn="true"
-            android:text="@string/version_title"
             android:textColor="@color/colorText1"
             android:textSize="16sp"/>
 

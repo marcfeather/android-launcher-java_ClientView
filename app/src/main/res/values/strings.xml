@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ClientViewLauncher</string>
+    <string name="app_name">DSCN Launcher</string>
 
     <string name="SharedPreferencesName">pref_setting</string>
 
@@ -14,9 +14,11 @@
     <!--<string name="disconnect">disconnect</string>-->
     <!--<string name="connectFailed">connect failed</string>-->
 
-    <string name="version_title">Version 1.1</string>
+    <string name="server_name">http://www.dsm.coretera.co.th</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="local_path_picture">DSCN Launcher/Picture/</string>
+    <string name="local_path_video">DSCN Launcher/Video/</string>
+    <string name="local_path_html">DSCN Launcher/HTML/</string>
+
 
 </resources>

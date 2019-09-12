@@ -133,10 +133,10 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        File directory;
+        //File directory;
 
 //        //External Picture directory path to save file
-//        pictureFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Picture/";
+//        pictureFolder = Environment.getExternalStorageDirectory() + File.separator + mContext.getResources().getString(R.string.local_path_picture);
 //        setting.SaveExternalStorageDirectoryPicture(mContext, pictureFolder);
 //        directory = new File(pictureFolder);
 //        if (!directory.exists()) {
@@ -144,7 +144,7 @@ public class MainFragment extends Fragment {
 //        }
 
 //        //External Video directory path to save file
-//        videoFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/Video/";
+//        videoFolder = Environment.getExternalStorageDirectory() + File.separator + mContext.getResources().getString(R.string.local_path_video);
 //        setting.SaveExternalStorageDirectoryVideo(mContext, videoFolder);
 //        directory = new File(videoFolder);
 //        if (!directory.exists()) {
@@ -152,23 +152,24 @@ public class MainFragment extends Fragment {
 //        }
 
         //External HTML directory path to save file
-        htmlFolder = Environment.getExternalStorageDirectory() + File.separator + "ClientViewLauncher/HTML/";
+        htmlFolder = Environment.getExternalStorageDirectory() + File.separator + mContext.getResources().getString(R.string.local_path_html);
         setting.SaveExternalStorageDirectoryHtml(mContext, htmlFolder);
-        directory = new File(htmlFolder);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+//        directory = new File(htmlFolder);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
     }
 
     private void startToCheck(){
 
-        setting.SaveServerName(mContext, "http://www.dsm.coretera.co.th");
+        //setting.SaveServerName(mContext, "http://www.dsm.coretera.co.th");
+        setting.SaveServerName(mContext, mContext.getResources().getString(R.string.server_name));
 
         setTimerDelayFirst(3);
         setTimerToCheckNetwork(3);
         setTimerDelay(3);
         setTimerToUpdateContent(6);
-        setTimerToPlayContent(6);
+        setTimerToPlayContent(4);
 
         countConnect = 1;
 
@@ -439,7 +440,7 @@ public class MainFragment extends Fragment {
     private void UpdateContent() {
         InitProgressDialog();
 
-        //File directory;
+        File directory;
 
 //        //External Picture directory path to delete file
 //        directory = new File(pictureFolder);
@@ -463,19 +464,15 @@ public class MainFragment extends Fragment {
 //            }
 //        }
 
-//        //External Html directory path to delete file
-//        directory = new File(htmlFolder);
-//        if (directory.exists()) {
-//            File[] files = directory.listFiles();
-//            for (File file : files) {
-//                if(file.exists()){
-//                    file.delete();
-//                }
-//            }
-//        }
 
-        File dir = new File(htmlFolder);
-        deleteRecursive(dir);
+        //delete all file and directory
+        directory = new File(htmlFolder);
+        deleteRecursive(directory);
+
+        //create directory
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
 
         // Execute the async task
         myDownloadTask = new DownloadTask();
@@ -486,9 +483,32 @@ public class MainFragment extends Fragment {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) {
                 deleteRecursive(child);
-                Log.d("DebugStep", "delete : " + child.getName());
+            }
+            if(fileOrDirectory.exists()) {
+                fileOrDirectory.delete();
+                Log.d("DebugStep", "delete: " + fileOrDirectory.getName());
             }
         }
+
+
+//        if (!fileOrDirectory.exists()) {
+//            return;
+//        }
+//        Log.d("DebugStep", "dir: " + fileOrDirectory);
+//        if (fileOrDirectory.isDirectory()) {
+//            String[] children = fileOrDirectory.list();
+//            Log.d("DebugStep", "children.length: " + children.length);
+//            File childDir;
+//            for (int i = 0; i < children.length; i++) {
+//                childDir = new File(fileOrDirectory, children[i]);
+//                if (childDir.isDirectory()) {
+//                    deleteRecursive(childDir);
+//                }
+//            }
+//            fileOrDirectory.delete();
+//            Log.d("DebugStep", "delete directory: " + fileOrDirectory);
+//        }
+
     }
 
     private void InitProgressDialog() {
@@ -565,9 +585,9 @@ public class MainFragment extends Fragment {
                 String contentName = server_result.get(0).get("contentName");
                 Integer deviceGroupId = Integer.valueOf(server_result.get(0).get("deviceGroupId"));
 
-                Log.d("DebugStep", "LocalPath: " + local_path);
-                Log.d("DebugStep", "ContentName: " + contentName);
-                Log.d("DebugStep", "deviceGroupId: " + deviceGroupId);
+//                Log.d("DebugStep", "LocalPath: " + local_path);
+//                Log.d("DebugStep", "ContentName: " + contentName);
+//                Log.d("DebugStep", "deviceGroupId: " + deviceGroupId);
 
                 if(deviceGroupId == 0) {
                     return "ไม่พบข้อมูลการแสดงผล กรุณาตรวจสอบที่ระบบจัดการข้อมูล";
