@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements Callback{
 
     private Context mContext;
 
+//    StageFragment stageFragment = null;
+
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1
             , REQUEST_READ_EXTERNAL_STORAGE = 2
             , REQUEST_ACCESS_NETWORK_STATE = 3
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements Callback{
         try {
             verifyStoragePermissions(this);
 
+            //createFragment();
+
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.contentContainer, new MainFragment())
@@ -75,6 +79,45 @@ public class MainActivity extends AppCompatActivity implements Callback{
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+//    protected Fragment createFragment() {
+//        this.stageFragment = StageFragment.newInstance();
+//        return this.stageFragment;
+//    }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        Log.d("DebugStep", "onKeyDown: ");
+//        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+//            switch (keyCode) {
+//                case KeyEvent.KEYCODE_BACK:
+//                    Log.d("DebugStep", "KEYCODE_BACK: ");
+//                    if (this.stageFragment.canGoBack()) {
+//                        Log.d("DebugStep", "canGoBack: ");
+//                        this.stageFragment.goBack();
+//                        Log.d("DebugStep", "goBack: ");
+//                    } else {
+//                        finish();
+//                    }
+//                    return true;
+//            }
+//
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("DebugStep", "onBackPressed: ");
+//        if (this.stageFragment.canGoBack()) {
+//            Log.d("DebugStep", "canGoBack: ");
+//            this.stageFragment.goBack();
+//            Log.d("DebugStep", "goBack: ");
+//        } else {
+//            // The back key event only counts if we execute super.onBackPressed();
+//            //super.onBackPressed();
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

@@ -14,6 +14,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.coretera.clientview.MainActivity;
 import com.coretera.clientview.R;
 import com.coretera.clientview.utility.setting;
 
@@ -26,6 +27,11 @@ public class StageFragment extends Fragment {
     private WebView webView;
 
     String folderHtml;
+
+//    public static StageFragment newInstance() {
+//        StageFragment fragment = new StageFragment();
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,27 @@ public class StageFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //This is the filter
+                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                    return true;
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                        //Dlog.d(“canGoBack”);
+                    } else {
+                        //Dlog.d(“canNotGoBack”);
+                        //((MainActivity)getActivity()).onBackPressed();
+                        getActivity().onBackPressed();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         folderHtml = setting.GetExternalStorageDirectoryHtml(mContext);
 
@@ -77,5 +104,15 @@ public class StageFragment extends Fragment {
 
         return view;
     }
+
+//    public boolean canGoBack() {
+//        return this.webView != null && this.webView.canGoBack();
+//    }
+//
+//    public void goBack() {
+//        if(this.webView != null) {
+//            this.webView.goBack();
+//        }
+//    }
 
 }
