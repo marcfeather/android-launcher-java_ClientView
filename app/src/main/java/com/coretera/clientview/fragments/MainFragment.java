@@ -50,6 +50,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static android.content.ContentValues.TAG;
+import static com.coretera.clientview.fragments.ConfigFragment.length;
 
 //public class MainFragment extends Fragment implements View.OnClickListener {
 public class MainFragment extends Fragment {
@@ -467,7 +468,8 @@ public class MainFragment extends Fragment {
 
         //delete all file and directory
         directory = new File(htmlFolder);
-        deleteRecursive(directory);
+        //deleteRecursive(directory);
+        deleteDirectory(directory);
 
         //create directory
         if (!directory.exists()) {
@@ -479,36 +481,23 @@ public class MainFragment extends Fragment {
         myDownloadTask.execute();
     }
 
-    public void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory()) {
-            for (File child : fileOrDirectory.listFiles()) {
-                deleteRecursive(child);
+    public void deleteDirectory(File file) {
+        if( file.exists() ) {
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                for(int i=0; i<files.length; i++) {
+                    if(files[i].isDirectory()) {
+                        deleteDirectory(files[i]);
+                    }
+                    else {
+                        files[i].delete();
+                        Log.d("DebugStep", "delete: " + files[i].getName());
+                    }
+                }
             }
-            if(fileOrDirectory.exists()) {
-                fileOrDirectory.delete();
-                Log.d("DebugStep", "delete: " + fileOrDirectory.getName());
-            }
+            //file.delete();
+            //Log.d("DebugStep", "delete: " + file.getName());
         }
-
-
-//        if (!fileOrDirectory.exists()) {
-//            return;
-//        }
-//        Log.d("DebugStep", "dir: " + fileOrDirectory);
-//        if (fileOrDirectory.isDirectory()) {
-//            String[] children = fileOrDirectory.list();
-//            Log.d("DebugStep", "children.length: " + children.length);
-//            File childDir;
-//            for (int i = 0; i < children.length; i++) {
-//                childDir = new File(fileOrDirectory, children[i]);
-//                if (childDir.isDirectory()) {
-//                    deleteRecursive(childDir);
-//                }
-//            }
-//            fileOrDirectory.delete();
-//            Log.d("DebugStep", "delete directory: " + fileOrDirectory);
-//        }
-
     }
 
     private void InitProgressDialog() {
@@ -516,6 +505,7 @@ public class MainFragment extends Fragment {
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setIndeterminate(false);
         // Progress dialog horizontal style
+        //mProgressDialog.setMax(100);
         //mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         // Progress dialog title
@@ -641,6 +631,7 @@ public class MainFragment extends Fragment {
 
         // Do the task in background/non UI thread
         protected Boolean doInBackground(Void... value){
+            //int count;
             try{
                 HttpURLConnection connection = null;
                 InputStream inputStream;
@@ -832,7 +823,7 @@ public class MainFragment extends Fragment {
         // On progress update
         protected void onProgressUpdate(Integer... progress){
             // Update the progress bar
-            //mProgressDialog.setProgress(progress[0]);
+            mProgressDialog.setProgress(progress[0]);
         }
 
         // On AsyncTask cancelled
@@ -919,14 +910,18 @@ public class MainFragment extends Fragment {
     protected Boolean saveContentToInternalStorage(BufferedInputStream bufferedInputStream, String _fileName, String folder){
         //Extract file name from URL
         String fileName = _fileName;
-
         try{
             OutputStream stream = new FileOutputStream(folder + fileName);
 
             byte dataBuffer[] = new byte[1024];
             int bytesRead;
+            //long total = 0;
             while ((bytesRead = bufferedInputStream.read(dataBuffer, 0, 1024)) != -1) {
                 stream.write(dataBuffer, 0, bytesRead);
+
+//                total += bytesRead;
+//                // publishing the progress....
+//                publishProgress((int)(total*100/length));
             }
 
             // Flushes the stream
