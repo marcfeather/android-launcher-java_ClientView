@@ -511,7 +511,7 @@ public class MainFragment extends Fragment {
         // Progress dialog title
         mProgressDialog.setTitle("อัพเดตข้อมูล");
         // Progress dialog message
-        mProgressDialog.setMessage("กรุณารอสักครู่, กำลังดึงข้อมูลจากเซิร์ฟเวอร์...");
+        mProgressDialog.setMessage("กรุณารอสักครู่, กำลังดึงข้อมูลจากเซิร์ฟเวอร์... (อาจใช้เวลานาน เนื่องจากข้อมูลจำนวนมาก)");
         mProgressDialog.setCancelable(false);
     }
 
@@ -985,10 +985,10 @@ public class MainFragment extends Fragment {
                     unzipEntry(zipfile, entry, destinationPath);
                 }
 
-
-                UnzipUtil d = new UnzipUtil(StorezipFileLocation, htmlFolder);
-                d.unzip();
-
+                //UnzipUtil d = new UnzipUtil(StorezipFileLocation, htmlFolder);
+                //d.unzip();
+                UnzipUtil d = new UnzipUtil();
+                d.doUnzip(StorezipFileLocation, htmlFolder);
             }
             catch (Exception e)
             {
